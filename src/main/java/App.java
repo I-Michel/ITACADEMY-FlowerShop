@@ -8,8 +8,6 @@ public class App {
         do {
             switch (opcion){
                 case 1:
-                    System.out.println("Opción número 1.");
-                    //prueba 2
                     break;
                 case 2:
                     break;
