@@ -1,4 +1,3 @@
-package FlowerShop;
 
 public class App {
 
