@@ -1,8 +1,8 @@
-package FlowerShop.Validations;
+package Validation;
 
 import java.util.Scanner;
 
-public class ValidateInt {
+public class Validation {
 
     private boolean ok = false;
     Scanner sc = new Scanner(System.in);
