@@ -4,12 +4,22 @@ public class Flower extends Product {
 
     private final String COLOR;
 
-    public Flower(String color) {
+    public Flower(float price, String color) {
+        super(price);
         this.COLOR = color;
+    }
+
+    public String getCOLOR() {
+        return COLOR;
     }
 
     @Override
     public void showCareInstructions() {
         System.out.println("Clean the vase and change the water every other day.");
+    }
+
+    @Override
+    public String toString() {
+        return "- Flower (" + this.COLOR + "). Price: " + super.price + " €";
     }
 }
