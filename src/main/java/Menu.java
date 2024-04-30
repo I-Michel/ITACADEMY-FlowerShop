@@ -3,7 +3,7 @@ import static Validation.Validation.validateInt;
 public class Menu {
     public static void start() {
         int option = 0;
-        System.out.println("Welcome!");
+        System.out.println("Welcome! Please choose an option.");
 
         do {
             option = validateInt("0. Close app. \n1. Create flower shop. \n2. Add product. \n3. Remove product. \n" +
