@@ -1,6 +1,15 @@
+import Product.*;
+
+import java.util.HashMap;
+
 import static Validation.Validation.validateInt;
 
 public class Menu {
+    static HashMap<Flower, Integer> flowerList = new HashMap<>();
+    static HashMap<Tree, Integer> treeList = new HashMap<>();
+    static HashMap<Decoration, Integer> decorationList = new HashMap<>();
+
+
     public static void start() {
         int option = 0;
         System.out.println("Welcome! Please choose an option.");
@@ -56,20 +65,48 @@ public class Menu {
     }
 
     public static void addProductStock() {
-        int option2 = 0;
+        int option = 0;
+        int type = 0;
+
         do {
-            validateInt("Which product do you want to add?\n 1. Tree \n 2. Flower\n 3. Decoration");
-            switch (option2) {
-                case 1:
-                    System.out.println("How many do you want to add?");
+            type = validateInt("What type of product would you like to add? Please choose an option:\n1. Flower.\n 2. Tree. \n3. Decoration");
+            if (type < 1 || type > 3) {
+                System.out.println("Invalid option.");
+            }
+        } while (type < 1 || type > 3);
+
+        do {
+            option = validateInt("Would you like to add an existing product or a new one? Please choose an option:\n1. Existing product.\n 2. New product.");
+            switch (option) {
+                case 1: // Existing
+
                     break;
-                case 2:
-                    break;
-                case 3:
+                case 2: // New product
+                    if (type == 1) {
+                        flowerList.put(ProductFactory.createFlower(price, color), units);
+                    } else if (type == 2) {
+                        treeList.put(ProductFactory.createTree(price, height), units);
+                    } else if (type == 3) {
+                        decorationList.put(ProductFactory.createDecoration(price, material), units);                    }
                     break;
                 default:
-                    System.out.println("Please choose one of the options.");
+                    System.out.println("Invalid option.");
             }
-        } while (option2 != 0);
+        } while (option != 1 && option != 2);
+
+        int units = validateInt("How many units do you want to add?");
+
+
+        switch (option) {
+            case 1:
+                System.out.println("How many do you want to add?");
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                System.out.println("Please choose one of the options.");
+        }
     }
 }

@@ -1,16 +1,17 @@
 package Product;
+import  Product.Decoration.Material;
 
 public class ProductFactory {
 
-    public Flower createFlower(float price, String color) {
+    public static Flower createFlower(float price, String color) {
         return new Flower(price, color);
     }
 
-    public Tree createTree(float price, float height) {
+    public static Tree createTree(float price, float height) {
         return new Tree(price, height);
     }
 
-    public Decoration createDecoration(float price, Product.Decoration.Material material) {
+    public static Decoration createDecoration(float price, Material material) {
         return new Decoration(price, material);
     }
 }
