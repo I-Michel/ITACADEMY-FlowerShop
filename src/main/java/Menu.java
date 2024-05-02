@@ -57,8 +57,10 @@ public class Menu {
 
     public static void addProductStock() {
         int option2 = 0;
+
         do {
-            validateInt("Which product do you want to add?\n 1. Tree \n 2. Flower\n 3. Decoration");
+            option2 = validateInt("Which product do you want to add?\n 1. Tree \n 2. Flower\n 3. Decoration");
+
             switch (option2) {
                 case 1:
                     System.out.println("How many do you want to add?");

@@ -1,5 +1,5 @@
 package Product;
-
+import Product.Decoration.Material;
 public class ProductFactory {
 
     public Flower createFlower(float price, String color) {
@@ -10,7 +10,7 @@ public class ProductFactory {
         return new Tree(price, height);
     }
 
-    public Decoration createDecoration(float price, Product.Decoration.Material material) {
+    public Decoration createDecoration(float price, Material material) {
         return new Decoration(price, material);
     }
 }
