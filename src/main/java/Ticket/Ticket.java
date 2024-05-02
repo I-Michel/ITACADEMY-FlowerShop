@@ -44,7 +44,7 @@ public class Ticket {
         return productList;
     }
 
-    public void setProductList(ArrayList<Product.Product> productList) {
+    public void setProductList(ArrayList<Product> productList) {
         this.productList = productList;
     }
 
@@ -54,6 +54,19 @@ public class Ticket {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+    @Override
+    public String toString() {
+        String S="";
+        S="*****Ticket*****\n" +
+                "Date: " + dateTime + "\n" +
+                "Products:\n";
+        for (Product producto : productList) {
+            S+= producto + "\n";
+
+        }
+        S+="Total " + price + "€\n";
+        return S;
     }
 }
 
