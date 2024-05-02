@@ -23,9 +23,37 @@ public class Ticket {
         }
         return price;
     }
-    private addProductTicket(){};
-    private removeProductTicket(){};
+    private void addProductTicket(Product product){
+        productList.add(product);
+    };
+    private void removeProductTicket( int i){
+        productList.remove(i);
 
+    };
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public float getPrice(){
+
+        return price;
+    }
+
+    public ArrayList<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(ArrayList<Product.Product> productList) {
+        this.productList = productList;
+    }
+
+    public void setPrice(float price){
+        this.price= price;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 }
-
 
