@@ -10,24 +10,34 @@ public class Ticket {
     private LocalDateTime dateTime;
     private float price;
     private ArrayList<Product> productList;
+    private
 
     public Ticket(LocalDateTime dateTime) {
         this.dateTime = dateTime;
         productList =  new ArrayList<Product>();
         price=calculateTotalPrice();
     }
-    private float calculateTotalPrice(){
+    public float calculateTotalPrice(){
         price=0;
         for (Product producto:productList){
            price=price+producto.getPrice();
         }
         return price;
     }
-    private void addProductTicket(Product product){
+    public void addProductTicket(Product product){
+        //validation producto existe
+
+        //validation hay stock
+        if()
+
         productList.add(product);
+        //restar en stock
     };
-    private void removeProductTicket( int i){
-        productList.remove(i);
+    private void removeProductTicket( int cantidad){
+        //validation producto en el ticket
+        //validation productos suficientes a eliminar
+        //remove
+        //sumar a stock
 
     };
 

@@ -124,9 +124,14 @@ public class Menu {
             switch (option) {
                 case 1:
                     //que tipo producto quieres añadir
+                    //que producto quieres añadir
+                    //que cantidad de ese producto quieres añadir
+
                     System.out.println("How many do you want to add?");//que tipo de
                     break;
                 case 2:
+                    //que producto deseas quitar del ticket
+
                     break;
                 case 3:
                     System.out.println(actualTicket.toString());
