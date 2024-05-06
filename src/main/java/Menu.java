@@ -1,3 +1,10 @@
+import Connection.MySQL.MySQLDB;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import static Validation.Validation.validateInt;
 
 public class Menu {
@@ -13,6 +20,7 @@ public class Menu {
             switch (option) {
                 case 1:
                     //createFlowerShop();
+                    pruebaConnection();
                     break;
                 case 2:
                     addProductStock();
@@ -73,5 +81,24 @@ public class Menu {
                     System.out.println("Please choose one of the options.");
             }
         } while (option2 != 0);
+    }
+
+    public static void pruebaConnection() {
+
+        try {
+            Connection con = MySQLDB.connect();
+
+            Statement stmt = con.createStatement();
+
+            int rs = stmt.executeUpdate(
+                    "INSERT INTO product (price, stock, type ) " +
+                            "VALUES (12, 1, 'berenjena')");
+            System.out.println(rs);
+
+        } catch (SQLException e) {
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
+        }
+        System.out.println("Se ha ejecutado");
     }
 }

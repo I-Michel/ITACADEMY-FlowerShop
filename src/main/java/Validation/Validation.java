@@ -2,41 +2,63 @@ package Validation;
 
 import Product.Product;
 import Exception.EmptyStockException;
-import java.util.ArrayList;
+import Exception.NotEnoughStockException;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Validation {
 
-    public static void validateStock(ArrayList<Product> productList) throws EmptyStockException {
-        try{
-            if (productList.isEmpty()) {
+    public static void validateStock(HashMap <Product, Integer> productStock, Product key ) throws EmptyStockException {
+       /* try{
+            if (productStock.isEmpty()) {
                 throw new EmptyStockException();
-            }
+            } else if ()(
+            throw new NotEnoughStockException();
+            )
         }catch(Exception e){
             System.out.println(e.getMessage());
-        }
+        }*/
     }
 
     public static int validateInt(String message) {
         boolean ok = false;
         Scanner sc = new Scanner(System.in);
-        int resultado = 0;
+        int outputInt = 0;
 
         do {
             System.out.println(message);
             try {
-                resultado = sc.nextInt();
+                outputInt = sc.nextInt();
                 ok = true;
             } catch (InputMismatchException e) {
-                System.out.println(e);
+                System.out.println(e.getMessage());
                 sc.nextLine();
             }
         } while (!ok);
-        return resultado;
+        return outputInt;
     }
 
-    public static String validateText(String message) {
+    public static float validateFloat(String message){
+        boolean ok = false;
+        Scanner sc = new Scanner(System.in);
+        float outputFloat = 0;
+
+        do {
+            System.out.println(message);
+            try {
+                outputFloat = sc.nextFloat();
+                ok = true;
+            } catch (InputMismatchException e) {
+                System.out.println(e.getMessage());
+                sc.nextLine();
+            }
+        } while (!ok);
+
+        return outputFloat;
+    }
+
+    public static String validateColor(String message) {
         boolean ok = false;
         Scanner sc = new Scanner(System.in);
 
