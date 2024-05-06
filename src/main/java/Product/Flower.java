@@ -14,7 +14,7 @@ public class Flower extends Product {
     }
 
     @Override
-    public void showCareInstructions() {
+    public void getCareInstructions() {
         System.out.println("Clean the vase and change the water every other day.");
     }
 

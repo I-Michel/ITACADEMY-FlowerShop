@@ -1,16 +1,10 @@
 import Product.*;
-import Product.Decoration.Material;
 
 import java.util.HashMap;
 
 import static Validation.Validation.validateInt;
-import static Validation.Validation.validateText;
 
 public class Menu {
-    static HashMap<Flower, Integer> flowerStock = new HashMap<>();
-    static HashMap<Tree, Integer> treeStock = new HashMap<>();
-    static HashMap<Decoration, Integer> decorationStock = new HashMap<>();
-
 
     public static void start() {
         int option = 0;
@@ -29,7 +23,7 @@ public class Menu {
                     addProduct();
                     break;
                 case 3:
-                    //removeProductStock();
+                    //removeProduct();
                     break;
                 case 4:
                     //showStock();
@@ -71,14 +65,6 @@ public class Menu {
         int type = 0;
 
         do {
-            type = validateInt("What type of product would you like to add?" +
-                    "\n1. Flower.\n 2. Tree. \n3. Decoration");
-            if (type < 1 || type > 3) {
-                System.out.println("Please choose a valid option.");
-            }
-        } while (type < 1 || type > 3);
-
-        do {
             option = validateInt("Is it an existing product or a new one?" +
                     "\n1. Existing product.\n 2. New product.");
             if (option < 1 || option > 2) {
@@ -86,62 +72,56 @@ public class Menu {
             }
         } while (option != 1 && option != 2);
 
-        int units = validateInt("How many do you want to add?");
-
         switch (option) {
             case 1:
-                addStock(type, units);
+                addStock();
                 break;
             case 2:
-                createNewProduct(type, units);
+                createNewProduct();
                 break;
             default:
                 System.out.println("Please choose a valid option.");
         }
     }
 
-    public static void addStock(int type, int units) {
-        switch (type) {
-            case 1: // Flower
+    public static void addStock() {
+        int productID = validateInt("Which is the ID of the product you want to add?");
+        int quantity = validateInt("How many do you want to add?");
 
-                break;
-            case 2: // Tree
-
-                break;
-            case 3: // Decoration
-
-                break;
-        }
+        //Falta código con sql
     }
 
-    public static void createNewProduct(int type, int units) {
-        float price = validateFloat("Which is the price of the new product?");
+    public static void createNewProduct() {
+        int type = 0;
+        do {
+            type = validateInt("What type of product would you like to add?" +
+                    "\n1. Flower.\n 2. Tree. \n3. Decoration");
+            if (type < 1 || type > 3) {
+                System.out.println("Please choose a valid option.");
+            }
+        } while (type < 1 || type > 3);
 
         switch (type) {
             case 1:
-                String color = validateText("Which is the color of the new flower?");
-                flowerStock.put(ProductFactory.createFlower(price, color), units);
+                Flower newFlower = ProductFactory.createFlower();
                 break;
             case 2:
-                float height = validateFloat("Which is the height of the new tree?");
-                treeStock.put(ProductFactory.createTree(price, height), units);
+                Tree newTree = ProductFactory.createTree();
                 break;
             case 3:
-                int numMaterial = 0;
-                Material material = null;
-                do {
-                    numMaterial = validateInt("Which is the material of the new decoration? Please choose an option:" +
-                            "\n1. Wood.\n 2. Plastic");
-                    if (numMaterial == 1) {
-                        material = Material.WOOD;
-                    } else if (numMaterial == 2) {
-                        material = Material.PLASTIC;
-                    } else {
-                        System.out.println("Invalid option.");
-                    }
-                } while (numMaterial != 1 && numMaterial != 2);
-                decorationStock.put(ProductFactory.createDecoration(price, material), units);
+                Decoration newDecoration = ProductFactory.createDecoration();
                 break;
         }
+
+        int quantity = validateInt("How many do you want to add?");
+
+        // Falta código con sql
+    }
+
+    public static void removeStock() {
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+        int quantity = validateInt("How many do you want to remove?");
+
+        //Falta código con sql y revisar cuadre stock (validaciones)
     }
 }
