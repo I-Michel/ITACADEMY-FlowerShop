@@ -19,7 +19,7 @@ public class Decoration extends Product {
     }
 
     @Override
-    public void showCareInstructions() {
+    public void getCareInstructions() {
         System.out.println("Wipe gently with a wet cloth when needed.");
     }
 

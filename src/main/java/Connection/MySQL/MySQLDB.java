@@ -20,14 +20,12 @@ public class MySQLDB {
         return instance;
     }
 
-    public static Connection connect() {
+    public void connectDB() {
         try {
             Connection con = DriverManager.getConnection(url, user, password);
-            return con;
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
             System.err.printf(e.getMessage());
         }
-        return null;
     }
 }

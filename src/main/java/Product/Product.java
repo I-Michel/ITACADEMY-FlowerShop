@@ -16,6 +16,5 @@ public abstract class Product {
         this.price = price;
     }
 
-    public abstract void showCareInstructions();
-
+    public abstract void getCareInstructions();
 }

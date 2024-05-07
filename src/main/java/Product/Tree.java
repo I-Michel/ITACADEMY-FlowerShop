@@ -14,7 +14,7 @@ public class Tree extends Product {
     }
 
     @Override
-    public void showCareInstructions() {
+    public void getCareInstructions() {
         System.out.println("Water again when the soil is mostly dry.");
     }
 

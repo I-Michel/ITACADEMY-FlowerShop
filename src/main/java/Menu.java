@@ -1,10 +1,3 @@
-import Connection.MySQL.MySQLDB;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import static Validation.Validation.validateInt;
 
 public class Menu {
@@ -62,24 +55,62 @@ public class Menu {
         } while (option != 0);
     }
 
-    public static void addProductStock() {
-        int option2 = 0;
+    public static void addProduct() {
+        int option = 0;
+        int type = 0;
 
         do {
-            option2 = validateInt("Which product do you want to add?\n 1. Tree \n 2. Flower\n 3. Decoration");
-
-            switch (option2) {
-                case 1:
-                    System.out.println("How many do you want to add?");
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                default:
-                    System.out.println("Please choose one of the options.");
+            option = validateInt("Is it an existing product or a new one?" +
+                    "\n1. Existing product.\n 2. New product.");
+            if (option < 1 || option > 2) {
+                System.out.println("Please choose a valid option.");
             }
-        } while (option2 != 0);
+        } while (option != 1 && option != 2);
+
+        switch (option) {
+            case 1:
+                addStock();
+                break;
+            case 2:
+                createNewProduct();
+                break;
+            default:
+                System.out.println("Please choose a valid option.");
+        }
+    }
+
+    public static void addStock() {
+        int productID = validateInt("Which is the ID of the product you want to add?");
+        int quantity = validateInt("How many do you want to add?");
+
+        //Falta código con sql
+    }
+
+    public static void createNewProduct() {
+        int type = 0;
+        do {
+            type = validateInt("What type of product would you like to add?" +
+                    "\n1. Flower.\n 2. Tree. \n3. Decoration");
+            if (type < 1 || type > 3) {
+                System.out.println("Please choose a valid option.");
+            }
+        } while (type < 1 || type > 3);
+
+        switch (type) {
+            case 1:
+                Flower newFlower = ProductFactory.createFlower();
+                break;
+            case 2:
+                Tree newTree = ProductFactory.createTree();
+                break;
+            case 3:
+                Decoration newDecoration = ProductFactory.createDecoration();
+                break;
+        }
+
+        int quantity = validateInt("How many do you want to add?");
+
+        // Falta código con sql
     }
 
     public static void pruebaConnection() {
@@ -99,5 +130,13 @@ public class Menu {
             System.err.printf(e.getMessage());
         }
         System.out.println("Se ha ejecutado");
+    }
+}
+
+    public static void removeStock() {
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+        int quantity = validateInt("How many do you want to remove?");
+
+        //Falta código con sql y revisar cuadre stock (validaciones)
     }
 }
