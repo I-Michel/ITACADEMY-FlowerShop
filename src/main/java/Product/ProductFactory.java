@@ -1,6 +1,8 @@
 package Product;
 import  Product.Decoration.Material;
 
+import static Validation.Validation.*;
+
 public class ProductFactory {
 
     public static Flower createFlower() {

@@ -1,3 +1,14 @@
+import Connection.MySQL.MySQLDB;
+import Product.Decoration;
+import Product.Flower;
+import Product.ProductFactory;
+import Product.Tree;
+import java.sql.Statement;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+
 import static Validation.Validation.validateInt;
 
 public class Menu {
@@ -15,10 +26,10 @@ public class Menu {
                     //createFlowerShop();
                     break;
                 case 2:
-                    addProductStock();
+                    //addProduct();
                     break;
                 case 3:
-                    //removeProductStock();
+                    //removeProduct();
                     break;
                 case 4:
                     //showStock();
@@ -113,6 +124,13 @@ public class Menu {
         // Falta código con sql
     }
 
+    public static void removeStock() {
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+        int quantity = validateInt("How many do you want to remove?");
+
+        //Falta código con sql y revisar cuadre stock (validaciones)
+    }
+
     public static void pruebaConnection() {
 
         try {
@@ -130,13 +148,5 @@ public class Menu {
             System.err.printf(e.getMessage());
         }
         System.out.println("Se ha ejecutado");
-    }
-}
-
-    public static void removeStock() {
-        int productID = validateInt("Which is the ID of the product you want to remove?");
-        int quantity = validateInt("How many do you want to remove?");
-
-        //Falta código con sql y revisar cuadre stock (validaciones)
     }
 }
