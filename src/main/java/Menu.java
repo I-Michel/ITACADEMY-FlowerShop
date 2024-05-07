@@ -20,7 +20,6 @@ public class Menu {
             switch (option) {
                 case 1:
                     //createFlowerShop();
-                    pruebaConnection();
                     break;
                 case 2:
                     addProductStock();
