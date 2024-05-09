@@ -1,11 +1,12 @@
 import Connection.MySQL.MySQLDB;
 import Product.ProductFactory;
 import Product.Product;
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 
+import static Validation.Validation.validateColor;
 import static Validation.Validation.validateInt;
 
 public class Menu {
@@ -86,6 +87,8 @@ public class Menu {
             case 2:
                 createNewProduct();
                 break;
+            default:
+                System.out.println("Please choose a valid option.");
         }
     }
 
@@ -142,7 +145,6 @@ public class Menu {
             System.err.printf(e.getMessage());
         }
         System.out.println("Se ha ejecutado");
-
     }
 
     public static void removeStock() {
