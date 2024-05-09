@@ -5,8 +5,6 @@ import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-
-import static Validation.Validation.validateColor;
 import static Validation.Validation.validateInt;
 
 public class Menu {
@@ -31,7 +29,7 @@ public class Menu {
                     addProduct();
                     break;
                 case 3:
-                    //removeProduct();
+                    //removeStock();
                     break;
                 case 4:
                     //showStock();
