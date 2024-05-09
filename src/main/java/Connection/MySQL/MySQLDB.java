@@ -7,7 +7,7 @@ public class MySQLDB {
     private static MySQLDB instance;
     private static String url = "jdbc:mysql://127.0.0.1:3306/flowershop";
     private static String user = "root";
-    private static String password = "";
+    private static String password = "Oxygennotincluded650.";
 
     private MySQLDB() {
 
