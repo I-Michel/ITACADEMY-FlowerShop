@@ -1,18 +1,18 @@
 import Connection.MySQL.MySQLDB;
-import Product.Decoration;
-import Product.Flower;
 import Product.ProductFactory;
-import Product.Tree;
-import java.sql.Statement;
-
+import Product.Product;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 
 import static Validation.Validation.validateInt;
 
 public class Menu {
     public static void start() {
+
+        // FALTA SELECCIONAR BBDD + EJECUTAR FLORI
+
         int option = 0;
         System.out.println("Welcome! Please choose an option.");
 
@@ -23,10 +23,11 @@ public class Menu {
 
             switch (option) {
                 case 1:
+                    // FALTA QUITAR Y ARREGLAR SWITCH
                     //createFlowerShop();
                     break;
                 case 2:
-                    //addProduct();
+                    addProduct();
                     break;
                 case 3:
                     //removeProduct();
@@ -72,7 +73,7 @@ public class Menu {
 
         do {
             option = validateInt("Is it an existing product or a new one?" +
-                    "\n1. Existing product.\n 2. New product.");
+                    "\n1. Existing product.\n2. New product.");
             if (option < 1 || option > 2) {
                 System.out.println("Please choose a valid option.");
             }
@@ -85,8 +86,6 @@ public class Menu {
             case 2:
                 createNewProduct();
                 break;
-            default:
-                System.out.println("Please choose a valid option.");
         }
     }
 
@@ -101,37 +100,31 @@ public class Menu {
         int type = 0;
         do {
             type = validateInt("What type of product would you like to add?" +
-                    "\n1. Flower.\n 2. Tree. \n3. Decoration");
+                    "\n1. Flower.\n2. Tree. \n3. Decoration");
             if (type < 1 || type > 3) {
                 System.out.println("Please choose a valid option.");
             }
         } while (type < 1 || type > 3);
 
+        Product newProduct = null;
+        String typeString = "";
+
         switch (type) {
             case 1:
-                Flower newFlower = ProductFactory.createFlower();
+                newProduct = ProductFactory.createFlower();
+                typeString = "FLOWER";
                 break;
             case 2:
-                Tree newTree = ProductFactory.createTree();
+                newProduct = ProductFactory.createTree();
+                typeString = "TREE";
                 break;
             case 3:
-                Decoration newDecoration = ProductFactory.createDecoration();
+                newProduct = ProductFactory.createDecoration();
+                typeString = "DECORATION";
                 break;
         }
 
         int quantity = validateInt("How many do you want to add?");
-
-        // Falta código con sql
-    }
-
-    public static void removeStock() {
-        int productID = validateInt("Which is the ID of the product you want to remove?");
-        int quantity = validateInt("How many do you want to remove?");
-
-        //Falta código con sql y revisar cuadre stock (validaciones)
-    }
-
-    public static void pruebaConnection() {
 
         try {
             Connection con = MySQLDB.connect();
@@ -140,7 +133,8 @@ public class Menu {
 
             int rs = stmt.executeUpdate(
                     "INSERT INTO product (price, stock, type ) " +
-                            "VALUES (12, 1, 'berenjena')");
+                            "VALUES (" + newProduct.getPrice() + ", " + quantity + ", '" + typeString + "')");
+
             System.out.println(rs);
 
         } catch (SQLException e) {
@@ -148,5 +142,13 @@ public class Menu {
             System.err.printf(e.getMessage());
         }
         System.out.println("Se ha ejecutado");
+
+    }
+
+    public static void removeStock() {
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+        int quantity = validateInt("How many do you want to remove?");
+
+        //Falta código con sql y revisar cuadre stock (validaciones)
     }
 }
