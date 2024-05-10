@@ -22,7 +22,7 @@ public class Menu {
 
             switch (option) {
                 case 1:
-                    //createFlowerShop();
+                    pruebaConnection();
                     break;
                 case 2:
                     addProduct();
@@ -150,7 +150,7 @@ public class Menu {
     }
 
     public static void pruebaConnection() {
-
+float f=2;
         try {
             Connection con = MySQLDB.connect();
 
@@ -158,7 +158,7 @@ public class Menu {
 
             int rs = stmt.executeUpdate(
                     "INSERT INTO product (price, stock, type ) " +
-                            "VALUES (12, 1, 'berenjena')");
+                            "VALUES ("+ f +", 1, 'TREE')");
             System.out.println(rs);
 
         } catch (SQLException e) {
