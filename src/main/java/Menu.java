@@ -1,11 +1,13 @@
 import Connection.MySQL.MySQLDB;
 import Product.Product;
 import Product.ProductFactory;
+
+import java.io.*;
 import java.sql.Statement;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
+import Ticket.Ticket;
 
 import static Validation.Validation.validateColor;
 import static Validation.Validation.validateInt;
@@ -54,10 +56,11 @@ public class Menu {
                     //showProfit();
                     break;
                 case 12:
-                    //generateJSON();
+
+                    //generateJSON(serializar ultimo ticket/Sc del nombre para el archivo);
                     break;
                 case 13:
-                    //readJSON();
+                    //readJSON(Sc nombre del ticket);
                     break;
                 default:
                     System.out.println("Please choose one of the options.");
@@ -167,4 +170,32 @@ float f=2;
         }
         System.out.println("Se ha ejecutado");
     }
+    public static void generateJSON(Ticket ticket,String name) {
+
+
+        try {
+            FileOutputStream fileOutputStream= new FileOutputStream(name+".ser");
+            ObjectOutputStream objectOutPutStream = new ObjectOutputStream(fileOutputStream);
+            objectOutPutStream.writeObject(ticket);
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public static void readJSON(String name) {
+
+
+        try  {
+            FileInputStream Archivo = new FileInputStream(name+".ser");
+            ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
+            Ticket ticket = (Ticket)objectInputStream.readObject();
+
+            System.out.println(ticket);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
