@@ -24,7 +24,7 @@ public class TicketFun {
         int ticketId = rs.getInt(1);
         ticket.setTicketId(ticketId);
         //Inserta valores a product_ticket
-        PreparedStatement stmtprodid = con.prepareStatement("select * from product",Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement stmtprodid = con.prepareStatement("select * from product", Statement.RETURN_GENERATED_KEYS);
         HashMap<Product, Integer> productList = ticket.getProductList();
 
         for (Map.Entry<Product, Integer> entry : productList.entrySet()) {
@@ -35,6 +35,10 @@ public class TicketFun {
             stmtprodt.setInt(1, ticketId);
             //stmtprodt.setInt(2, prod.getProductId());
             stmtprodt.setInt(3, quant);
-            stmtprodt.executeUpdate();
-
+        }
+        stmtprodid.executeUpdate();
+    }
+          catch (SQLException e) {
+                System.err.println("Falta escribir mensaje error");
+                System.err.printf(e.getMessage());
         }}}
