@@ -1,38 +1,41 @@
 package Ticket;
 import Connection.MySQL.MySQLDB;
-
+import Product.Product;
 import java.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 public class TicketFun {
     public static void createTicket(Ticket ticket) {
     try {
+        //inserta valores a ticket
         Connection con = MySQLDB.connect();
         PreparedStatement stmt = con.prepareStatement(Queries.INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
 
-        stmt.setTimestamp(1, ticket.getDate());
+        stmt.setTimestamp(1, ticket.tsdate());
         stmt.setFloat(2, ticket.getPrice());
         stmt.executeUpdate();
 
         ResultSet rs = stmt.getGeneratedKeys();
-        stmt.executeUpdate();
-        if (rs.next()) {
-            int ticketId = rs.getInt(1);
-            ticket.setTicketID(ticketId);
+        int ticketId = rs.getInt(1);
+        ticket.setTicketId(ticketId);
+        //Inserta valores a product_ticket
+        PreparedStatement stmtprodid = con.prepareStatement("select * from product",Statement.RETURN_GENERATED_KEYS);
+        HashMap<Product, Integer> productList = ticket.getProductList();
 
-            Map<Product, Integer> products = ticket.getProducts();
+        for (Map.Entry<Product, Integer> entry : productList.entrySet()) {
+            Product prod = entry.getKey();
+            Integer quant = entry.getValue();
 
-            for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-                Product product = entry.getKey();
-                Integer quantity = entry.getValue();
+            PreparedStatement stmtprodt = con.prepareStatement(Queries.INSERT_PRODUCT_TICKET);
+            stmtprodt.setInt(1, ticketId);
+            //stmtprodt.setInt(2, prod.getProductId());
+            stmtprodt.setInt(3, quant);
+            stmtprodt.executeUpdate();
 
-                PreparedStatement statementProductTicket = connection.prepareStatement(QueriesSQL.SQL_INSERT_PRODUCT_TICKET);
-                statementProductTicket.setInt(1, ticketId);
-                statementProductTicket.setInt(2, product.getProductId());
-                statementProductTicket.setInt(3, quantity);
-                statementProductTicket.executeUpdate();
-            }
         }
     }
 
