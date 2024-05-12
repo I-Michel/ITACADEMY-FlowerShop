@@ -2,20 +2,24 @@ package Ticket;
 
 import Product.Product;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 import static Validation.Validation.validateInt;
 
 //Serializar
 public class Ticket {
-    private LocalDateTime dateTime;
+    private int ticketID;
+    private Date date;
     private float price;
     private ArrayList<Product> productList;
 
 
-    private Ticket(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    private Ticket(int ticketID, Date date) {
+        this.ticketID = ticketID;
+        this.date = date;
         productList =  new ArrayList<Product>();
         price=calculateTotalPrice();
     }
@@ -48,8 +52,8 @@ public class Ticket {
 
     };
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public Date getDate() {
+        return date;
     }
 
     public float getPrice(){
@@ -85,5 +89,13 @@ public class Ticket {
         S+="Total " + price + "€\n";
         return S;
 
+    }
+
+    public int getTicketID() {
+        return ticketID;
+    }
+
+    public void setTicketID(int ticketID) {
+        this.ticketID = ticketID;
     }
 }
