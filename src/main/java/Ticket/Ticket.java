@@ -6,27 +6,31 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static Validation.Validation.validateInt;
 
 //Serializar
 public class Ticket {
-    private int ticketID;
+    private int ticketId;
     private Date date;
     private float price;
-    private ArrayList<Product> productList;
+    private HashMap<Product,Integer> productList;
 
 
-    private Ticket(int ticketID, Date date) {
-        this.ticketID = ticketID;
+    private Ticket(int ticketId, Date date) {
+        this.ticketId = ticketId;
         this.date = date;
-        productList =  new ArrayList<Product>();
+        productList =  new HashMap<Product,Integer>();
         price=calculateTotalPrice();
     }
     public float calculateTotalPrice(){
         price=0;
-        for (Product producto:productList){
-            price=price+producto.getPrice();
+        for (Map.Entry <Product,Integer > product:productList.entrySet()){
+            Product prod = product.getKey();
+            Integer quant = product.getValue();
+            price=price+(prod.getPrice()*quant);
         }
         return price;
     }
@@ -35,7 +39,7 @@ public class Ticket {
 
         //validation hay stock
 
-        productList.add(product);
+
         //restar en stock
     };
     private void removeProductTicket(Ticket actualTicket){
@@ -61,11 +65,11 @@ public class Ticket {
         return price;
     }
 
-    public ArrayList<Product> getProductList() {
+    public  HashMap<Product,Integer> getProductList() {
         return productList;
     }
 
-    public void setProductList(ArrayList<Product> productList) {
+    public void setProductList(HashMap<Product,Integer> productList) {
         this.productList = productList;
     }
 
@@ -73,29 +77,36 @@ public class Ticket {
         this.price= price;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDateTime(Date date) {
+        this.date = date;
     }
+    public Timestamp tsdate(){
+    Timestamp tsdate=new Timestamp(date.getTime());
+                return tsdate;}
     @Override
     public String toString() {
         String S="";
+        int i=0;
         S="*****Ticket*****\n" +
-                "Date: " + dateTime + "\n" +
+                "Date: " + date + "\n" +
                 "Products:\n";
-        for (int i = 0; i < productList.size(); i++) {
-            Product product = productList.get(i);
-            S+= i + ".   " + product + "\n";
+        for (Map.Entry <Product,Integer > product:productList.entrySet()){
+            Product prod = product.getKey();
+            Integer quant = product.getValue();
+            S+= i + ".   " + prod +"         x"+quant+"\n";
+            i=i+1;
         }
         S+="Total " + price + "€\n";
         return S;
 
     }
 
-    public int getTicketID() {
-        return ticketID;
+
+    public int getTicketId() {
+        return ticketId;
     }
 
-    public void setTicketID(int ticketID) {
-        this.ticketID = ticketID;
+    public void setTicketId(int ticketId) {
+        this.ticketId = ticketId;
     }
 }
