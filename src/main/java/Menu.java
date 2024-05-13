@@ -1,28 +1,23 @@
-import Connection.MySQL.MySQLDB;
-import Product.Product;
-import Product.ProductFactory;
-
+import Connection.*;
+import Connection.MySQL.*;
+import Connection.MongoDB.*;
+import FlowerShop.FlowerShop;
+import Product.*;
 import java.io.*;
 import java.sql.Statement;
-
 import java.sql.Connection;
 import java.sql.SQLException;
-import Ticket.Ticket;
-
-import javax.xml.crypto.Data;
-
-import static Ticket.TicketFun.prodCreator;
-import static Validation.Validation.validateColor;
-import static Validation.Validation.validateInt;
-
+import Ticket.*;
+import static Validation.Validation.*;
 
 public class Menu {
     public static void start() {
 
-        // FALTA SELECCIONAR BBDD + EJECUTAR FLORI
+        FlowerShop flowerShop = FlowerShop.connectFlowerShop();
+        DataBase db = flowerShop.getDb();
 
         int option = 0;
-        System.out.println("Welcome! Please choose an option.");
+        System.out.println("Welcome to " + flowerShop.getName() + " Flower Shop! Please choose an option:");
 
         do {
             option = validateInt("0. Close app. \n1. Create flower shop. \n2. Add product. \n3. Remove product. \n" +
@@ -56,8 +51,7 @@ public class Menu {
                     //generateTicket();
                     break;
                 case 9:
-
-                    prodCreator(1);
+                    //showTicket();
                 case 10:
                     //displayPurchases();
                     break;
@@ -161,11 +155,11 @@ public class Menu {
         //Falta código con sql y revisar cuadre stock (validaciones)
     }
 
-    public static void generateJSON(Ticket ticket,String name) {
+    public static void generateJSON(Ticket ticket, String name) {
 
 
         try {
-            FileOutputStream fileOutputStream= new FileOutputStream(name+".ser");
+            FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
             ObjectOutputStream objectOutPutStream = new ObjectOutputStream(fileOutputStream);
             objectOutPutStream.writeObject(ticket);
 
@@ -178,10 +172,10 @@ public class Menu {
     public static void readJSON(String name) {
 
 
-        try  {
-            FileInputStream Archivo = new FileInputStream(name+".ser");
+        try {
+            FileInputStream Archivo = new FileInputStream(name + ".ser");
             ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
-            Ticket ticket = (Ticket)objectInputStream.readObject();
+            Ticket ticket = (Ticket) objectInputStream.readObject();
 
             System.out.println(ticket);
         } catch (IOException | ClassNotFoundException e) {

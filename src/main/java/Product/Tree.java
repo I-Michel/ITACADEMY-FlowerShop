@@ -9,6 +9,11 @@ public class Tree extends Product {
         this.HEIGHT = height;
     }
 
+    public Tree(float price, float height, int id) {
+        super(price, id);
+        this.HEIGHT = height;
+    }
+
     public float getHEIGHT() {
         return HEIGHT;
     }
