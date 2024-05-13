@@ -20,6 +20,6 @@ public class Flower extends Product {
 
     @Override
     public String toString() {
-        return "- Flower (" + this.COLOR + "). Price: " + super.price + " €";
+        return "- Flower: ID " + this.id + " - Color: " + this.COLOR + " - Price: " + super.price + " €";
     }
 }

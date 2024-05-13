@@ -1,8 +1,9 @@
 package Connection.MySQL;
 
+import Connection.DataBase;
 import java.sql.*;
 
-public class MySQLDB {
+public class MySQLDB implements DataBase {
 
     private static MySQLDB instance;
     private static String url = "jdbc:mysql://localhost:3306/flowershop";
