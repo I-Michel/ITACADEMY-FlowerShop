@@ -155,7 +155,7 @@ public class Menu {
     public static void pruebaConnection() {
 float f=2;
         try {
-            Connection con = MySQLDB.connect();
+            Connection con =  ;
 
             Statement stmt = con.createStatement();
 

@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
-
+import Product.Tree;
 public class TicketFun {
     public static void createTicket(Ticket ticket) {
     try {
@@ -43,16 +43,24 @@ public class TicketFun {
         System.err.println("Falta escribir mensaje error");
         System.err.printf(e.getMessage());
     }}
-    public static void pruebaConnection() {
+    public static Product prodCreator(int idProd) {
 
         try {
             Connection con = MySQLDB.connect();
             float i=0;
             PreparedStatement stmt = con.prepareStatement(
-                    "INSERT INTO product (price, stock, type ) " +
-                            "VALUES ("+i+", 1, 'berenjena')");
+                    "SELECT type FROM product WHERE id="+idProd);
+            stmt.setString(4,"type");
+            ResultSet rs=stmt.executeQuery();
+
+            if (rs.equals("TREE")) {
 
 
+                Tree tree=new tree();
+                return tree;
+            } else if (rs.equals("FLOWER")) {
+            } else if (rs.equals("DECORATION")) {
+            }
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
