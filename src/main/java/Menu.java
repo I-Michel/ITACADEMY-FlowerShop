@@ -9,11 +9,17 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import Ticket.Ticket;
 
+import javax.xml.crypto.Data;
+
 import static Validation.Validation.validateColor;
 import static Validation.Validation.validateInt;
 
+
 public class Menu {
     public static void start() {
+
+        // FALTA SELECCIONAR BBDD + EJECUTAR FLORI
+
         int option = 0;
         System.out.println("Welcome! Please choose an option.");
 
@@ -24,13 +30,14 @@ public class Menu {
 
             switch (option) {
                 case 1:
-                    pruebaConnection();
+                    // FALTA QUITAR Y ARREGLAR SWITCH
+                    //createFlowerShop();
                     break;
                 case 2:
                     addProduct();
                     break;
                 case 3:
-                    //removeProduct();
+                    //removeStock();
                     break;
                 case 4:
                     //showStock();
@@ -152,24 +159,6 @@ public class Menu {
         //Falta código con sql y revisar cuadre stock (validaciones)
     }
 
-    public static void pruebaConnection() {
-float f=2;
-        try {
-            Connection con =  ;
-
-            Statement stmt = con.createStatement();
-
-            int rs = stmt.executeUpdate(
-                    "INSERT INTO product (price, stock, type ) " +
-                            "VALUES ("+ f +", 1, 'TREE')");
-            System.out.println(rs);
-
-        } catch (SQLException e) {
-            System.err.println("Falta escribir mensaje error");
-            System.err.printf(e.getMessage());
-        }
-        System.out.println("Se ha ejecutado");
-    }
     public static void generateJSON(Ticket ticket,String name) {
 
 
