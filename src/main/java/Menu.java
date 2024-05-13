@@ -51,7 +51,8 @@ public class Menu {
                     //generateTicket();
                     break;
                 case 9:
-                    //showTicket();
+                    TicketFun.prodCreator(2);
+                    break;
                 case 10:
                     //displayPurchases();
                     break;

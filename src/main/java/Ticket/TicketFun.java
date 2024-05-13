@@ -35,7 +35,7 @@ public class TicketFun {
 
             PreparedStatement stmtprodt = con.prepareStatement(QueriesMySQL.INSERT_PRODUCT_TICKET);
             stmtprodt.setInt(1, ticketId);
-            //stmtprodt.setInt(2, prod.getProductId());
+            stmtprodt.setInt(2, prod.getId());
             stmtprodt.setInt(3, quant);
             stmtprodt.executeUpdate();
 
@@ -52,18 +52,20 @@ public class TicketFun {
         try {
             Connection con = MySQLDB.connect();
             PreparedStatement stmt = con.prepareStatement(
-                    "SELECT id_product, price, stock, type FROM product WHERE id_product=" + idProd);
+                    QueriesMySQL.SELECT_PRODUCT);
 
-
+            stmt.setInt(1, idProd);
             ResultSet rs = stmt.executeQuery();
 
 
             if (rs.next()) {
-                String type = rs.getString("type"); // Obtén el valor de la columna "type"
+                String type = rs.getString("type");
                 int price= rs.getInt("price");
+                String attribute= rs.getString("attribute");
                 switch (type){
                 case "TREE":
-                    Tree tree = new Tree(price, 8);
+
+                    Tree tree = new Tree(price, Integer.parseInt(attribute),idProd);
                     System.out.print(tree);
                     return tree;
 
