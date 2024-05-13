@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 import Product.Tree;
+import Product.Flower;
+import Product.Decoration;
 public class TicketFun {
     public static void createTicket(Ticket ticket) {
     try {
@@ -46,26 +48,38 @@ public class TicketFun {
     }}
     public static Product prodCreator(int idProd) {
 
+
         try {
             Connection con = MySQLDB.connect();
-            float i=0;
             PreparedStatement stmt = con.prepareStatement(
-                    "SELECT type FROM product WHERE id="+idProd);
-            stmt.setString(4,"type");
-            ResultSet rs=stmt.executeQuery();
+                    "SELECT type FROM product WHERE id=" + idProd);
 
-            if (rs.equals("TREE")) {
+            //stmt.setString(4,"type");
 
+            ResultSet rs = stmt.executeQuery();
+            String type = rs.getString(4);
+            switch (type){
+                case "TREE":
+                    Tree tree = new Tree(8, 8);
+                    System.out.print(tree);
+                    return tree;
 
-                Tree tree=new tree();
-                return tree;
-            } else if (rs.equals("FLOWER")) {
-            } else if (rs.equals("DECORATION")) {
+                case "FLOWER":
+                    return null;
+
+                case "DECORATION":
+
+                    return null;
             }
-            stmt.executeUpdate();
+
+
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
             System.err.printf(e.getMessage());
+            e.printStackTrace();
         }
+
+
         System.out.println("Se ha ejecutado");
-}}
+        return null;
+    }}
