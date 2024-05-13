@@ -52,15 +52,18 @@ public class TicketFun {
         try {
             Connection con = MySQLDB.connect();
             PreparedStatement stmt = con.prepareStatement(
-                    "SELECT type FROM product WHERE id=" + idProd);
+                    "SELECT id_product, price, stock, type FROM product WHERE id_product=" + idProd);
 
-            //stmt.setString(4,"type");
 
             ResultSet rs = stmt.executeQuery();
-            String type = rs.getString(4);
-            switch (type){
+
+
+            if (rs.next()) {
+                String type = rs.getString("type"); // Obtén el valor de la columna "type"
+                int price= rs.getInt("price");
+                switch (type){
                 case "TREE":
-                    Tree tree = new Tree(8, 8);
+                    Tree tree = new Tree(price, 8);
                     System.out.print(tree);
                     return tree;
 
@@ -73,7 +76,7 @@ public class TicketFun {
             }
 
 
-        } catch (SQLException e) {
+        } }catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
             System.err.printf(e.getMessage());
             e.printStackTrace();

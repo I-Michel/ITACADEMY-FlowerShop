@@ -6,7 +6,7 @@ import java.sql.*;
 public class MySQLDB implements DataBase {
 
     private static MySQLDB instance;
-    private static String url = "jdbc:mysql://localhost1:3306/flowershop";
+    private static String url = "jdbc:mysql://localhost:3306/flowershop";
     private static String user = "root";
     private static String password = "2307";
 

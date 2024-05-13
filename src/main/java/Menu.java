@@ -11,6 +11,7 @@ import Ticket.Ticket;
 
 import javax.xml.crypto.Data;
 
+import static Ticket.TicketFun.prodCreator;
 import static Validation.Validation.validateColor;
 import static Validation.Validation.validateInt;
 
@@ -55,7 +56,8 @@ public class Menu {
                     //generateTicket();
                     break;
                 case 9:
-                    //showTicket();
+
+                    prodCreator(1);
                 case 10:
                     //displayPurchases();
                     break;
