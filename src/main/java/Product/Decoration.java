@@ -25,6 +25,6 @@ public class Decoration extends Product {
 
     @Override
     public String toString() {
-        return "- Decoration (" + this.MATERIAL + "). Price: " + super.price + " €";
+        return "- Decoration: ID " + this.id + " - Material: " + this.MATERIAL + " - Price: " + super.price + " €";
     }
 }

@@ -20,6 +20,6 @@ public class Tree extends Product {
 
     @Override
     public String toString() {
-        return "- Tree (" + this.HEIGHT + "). Price: " + super.price + " €";
+        return "- Tree: ID " + this.id + " - Height: " + this.HEIGHT + " - Price: " + super.price + " €";
     }
 }
