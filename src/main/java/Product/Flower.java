@@ -9,6 +9,11 @@ public class Flower extends Product {
         this.COLOR = color;
     }
 
+    public Flower(float price, String color, int id) {
+        super(price, id);
+        this.COLOR = color;
+    }
+
     public String getCOLOR() {
         return COLOR;
     }

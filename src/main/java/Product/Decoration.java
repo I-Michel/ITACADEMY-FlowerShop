@@ -14,6 +14,11 @@ public class Decoration extends Product {
         this.MATERIAL = material;
     }
 
+    public Decoration(float price, Material material, int id) {
+        super(price, id);
+        this.MATERIAL = material;
+    }
+
     public Material getMATERIAL() {
         return MATERIAL;
     }
