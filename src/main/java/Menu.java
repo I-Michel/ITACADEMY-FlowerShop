@@ -1,13 +1,13 @@
 import Connection.MySQL.MySQLDB;
 import Product.Product;
 import Product.ProductFactory;
+
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-
-import static Validation.Validation.validateColor;
 import static Validation.Validation.validateInt;
 
 public class Menu {
@@ -25,7 +25,7 @@ public class Menu {
                     //createFlowerShop();
                     break;
                 case 2:
-                    addProduct();
+                    //addProduct();
                     break;
                 case 3:
                     //removeProduct();
@@ -71,7 +71,7 @@ public class Menu {
 
         do {
             option = validateInt("Is it an existing product or a new one?" +
-                    "\n1. Existing product.\n2. New product.");
+                    "\n1. Existing product.\n 2. New product.");
             if (option < 1 || option > 2) {
                 System.out.println("Please choose a valid option.");
             }
@@ -91,7 +91,22 @@ public class Menu {
         int productID = validateInt("Which is the ID of the product you want to add?");
         int quantity = validateInt("How many do you want to add?");
 
-        //Falta código con sql
+        //Falta código con sql y revisar cuadre stock (validaciones)
+
+        //Falta testear esta query
+        try {
+            Connection con = MySQLDB.connect();
+
+            Statement stmt = con.createStatement();
+
+            stmt.executeUpdate(
+                    "\"UPDATE producto SET stock = " + quantity + " WHERE producto.id = " + productID);
+
+        } catch (SQLException e) {
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
+        }
+        System.out.println("Se ha ejecutado");
     }
 
     public static void createNewProduct() {
@@ -129,11 +144,9 @@ public class Menu {
 
             Statement stmt = con.createStatement();
 
-            int rs = stmt.executeUpdate(
+            stmt.executeUpdate(
                     "INSERT INTO product (price, stock, type ) " +
                             "VALUES (" + newProduct.getPrice() + ", " + quantity + ", '" + typeString + "')");
-
-            System.out.println(rs);
 
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
@@ -142,24 +155,50 @@ public class Menu {
         System.out.println("Se ha ejecutado");
     }
 
-    public static void removeStock() {
+    public static void removeProduct() {
+
         int productID = validateInt("Which is the ID of the product you want to remove?");
-        int quantity = validateInt("How many do you want to remove?");
 
-        //Falta código con sql y revisar cuadre stock (validaciones)
-    }
-
-    public static void pruebaConnection() {
-
+        //Falta testear esta query
         try {
             Connection con = MySQLDB.connect();
 
             Statement stmt = con.createStatement();
 
-            int rs = stmt.executeUpdate(
-                    "INSERT INTO product (price, stock, type ) " +
-                            "VALUES (12, 1, 'berenjena')");
-            System.out.println(rs);
+            stmt.executeUpdate(
+                    "\"DELETE FROM producto WHERE producto.id = " + productID);
+
+        } catch (SQLException e) {
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
+        }
+        System.out.println("Se ha ejecutado");
+
+    }
+
+    public static void removeStock() {
+
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+        int quantityToRemove = validateInt("How many do you want to remove?");
+        int newQuantity = 0;
+        int actualQuantity = 0;
+
+        //Falta revisar cuadre stock (validaciones)
+
+        //Falta testear esta query
+
+        try {
+            Connection con = MySQLDB.connect();
+            Statement stmt = con.createStatement();
+
+            ResultSet rs = stmt.executeQuery("SELECT stock FROM product WHERE id_product = " + productID);
+
+            actualQuantity = rs.getInt("stock");
+
+            newQuantity = actualQuantity - quantityToRemove;
+
+            int prueba = stmt.executeUpdate(
+                    "\"UPDATE product SET stock = " + newQuantity + " WHERE id_product = " + productID);
 
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
