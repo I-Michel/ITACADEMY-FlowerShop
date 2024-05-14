@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TicketFun {
-    public static void createTicket(Ticket ticket) {
+   /* public static void createTicket(Ticket ticket) {
     try {
         //inserta valores a ticket
         Connection con = MySQLDB.connect();
@@ -41,4 +41,4 @@ public class TicketFun {
           catch (SQLException e) {
                 System.err.println("Falta escribir mensaje error");
                 System.err.printf(e.getMessage());
-        }}}
+        }}*/}

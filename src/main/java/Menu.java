@@ -3,11 +3,12 @@ import Connection.MySQL.*;
 import Connection.MongoDB.*;
 import FlowerShop.FlowerShop;
 import Product.*;
+
 import java.io.*;
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
+
 import Ticket.*;
+
 import static Validation.Validation.*;
 
 public class Menu {
@@ -30,10 +31,10 @@ public class Menu {
                     //createFlowerShop();
                     break;
                 case 2:
-                    addProduct();
+                    addProduct(db);
                     break;
                 case 3:
-                    //removeStock();
+                    removeStock(db);
                     break;
                 case 4:
                     //showStock();
@@ -71,7 +72,7 @@ public class Menu {
         } while (option != 0);
     }
 
-    public static void addProduct() {
+    public static void addProduct(DataBase db) {
         int option = 0;
         int type = 0;
 
@@ -88,7 +89,7 @@ public class Menu {
                 addStock();
                 break;
             case 2:
-                createNewProduct();
+                createNewProduct(db);
                 break;
         }
     }
@@ -100,7 +101,7 @@ public class Menu {
         //Falta código con sql
     }
 
-    public static void createNewProduct() {
+    public static void createNewProduct(DataBase db) {
         int type = 0;
         do {
             type = validateInt("What type of product would you like to add?" +
@@ -131,8 +132,7 @@ public class Menu {
         int quantity = validateInt("How many do you want to add?");
 
         try {
-            Connection con = MySQLDB.connect();
-
+            Connection con = db.connect();
             Statement stmt = con.createStatement();
 
             int rs = stmt.executeUpdate(
@@ -148,11 +148,34 @@ public class Menu {
         System.out.println("Se ha ejecutado");
     }
 
-    public static void removeStock() {
-        int productID = validateInt("Which is the ID of the product you want to remove?");
-        int quantity = validateInt("How many do you want to remove?");
+    public static void removeStock(DataBase db) {
+        //Revisar cuadre stock (validaciones) y que producto exista
 
-        //Falta código con sql y revisar cuadre stock (validaciones)
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+        int quantityToRemove = validateInt("How many do you want to remove?");
+        Connection con = db.connect();
+
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
+            stmt.setInt(1, productID);
+            ResultSet rs = stmt.executeQuery();
+
+            int actualQuantity = 0;
+            if (rs.next()) {
+                actualQuantity = rs.getInt("stock");
+            }
+            int newQuantity = actualQuantity - quantityToRemove;
+
+            stmt = con.prepareStatement("UPDATE product SET stock = ? WHERE id_product = ?");
+            stmt.setInt(1, newQuantity);
+            stmt.setInt(2, productID);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Error updating the product stock." + e);
+        } finally {
+            db.disconnect(con);
+        }
     }
 
     public static void generateJSON(Ticket ticket, String name) {
@@ -182,5 +205,4 @@ public class Menu {
             System.out.println(e.getMessage());
         }
     }
-
 }

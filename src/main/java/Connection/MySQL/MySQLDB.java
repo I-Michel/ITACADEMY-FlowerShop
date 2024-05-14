@@ -1,6 +1,7 @@
 package Connection.MySQL;
 
 import Connection.DataBase;
+
 import java.sql.*;
 
 public class MySQLDB implements DataBase {
@@ -8,7 +9,7 @@ public class MySQLDB implements DataBase {
     private static MySQLDB instance;
     private static String url = "jdbc:mysql://localhost:3306/flowershop";
     private static String user = "root";
-    private static String password = "";
+    private static String password = "1203";
 
     private MySQLDB() {
 
@@ -21,14 +22,22 @@ public class MySQLDB implements DataBase {
         return instance;
     }
 
-    public static Connection connect() {
+    @Override
+    public Connection connect() {
         try {
-            Connection con = DriverManager.getConnection(url, user, password);
-            return con;
+            return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
-            System.err.println("Falta escribir mensaje error");
-            System.err.printf(e.getMessage());
+            System.err.println("Error establishing a database connection or selecting database 'flowershop'." + e);
         }
         return null;
+    }
+
+    @Override
+    public void disconnect(Connection con) {
+        try {
+            con.close();
+        } catch (SQLException e) {
+            System.err.println("Error closing the database connection." + e);
+        }
     }
 }
