@@ -11,6 +11,7 @@ import java.util.Map;
 import Product.Tree;
 import Product.Flower;
 import Product.Decoration;
+import Product.Decoration.Material;
 public class TicketFun {
     public static void createTicket(Ticket ticket) {
     try {
@@ -70,11 +71,13 @@ public class TicketFun {
                     return tree;
 
                 case "FLOWER":
-                    return null;
+                    Flower flower = new Flower(price,attribute,idProd);
+                    return flower;
 
                 case "DECORATION":
-
-                    return null;
+                    Material material = Material.valueOf(attribute.toUpperCase());
+                    Decoration decoration = new Decoration(price,material,idProd);
+                    return decoration;
             }
 
 
