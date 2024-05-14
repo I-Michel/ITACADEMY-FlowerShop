@@ -3,10 +3,8 @@ import Connection.MySQL.*;
 import Connection.MongoDB.*;
 import FlowerShop.FlowerShop;
 import Product.*;
-
 import java.io.*;
 import java.sql.*;
-
 import Ticket.*;
 
 import static Validation.Validation.*;
@@ -179,8 +177,6 @@ public class Menu {
     }
 
     public static void generateJSON(Ticket ticket, String name) {
-
-
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
             ObjectOutputStream objectOutPutStream = new ObjectOutputStream(fileOutputStream);
@@ -193,8 +189,6 @@ public class Menu {
     }
 
     public static void readJSON(String name) {
-
-
         try {
             FileInputStream Archivo = new FileInputStream(name + ".ser");
             ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
