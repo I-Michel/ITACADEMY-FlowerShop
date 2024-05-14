@@ -5,11 +5,22 @@ import FlowerShop.FlowerShop;
 import Product.*;
 
 import java.io.*;
-import java.sql.*;
+
+import Connection.MySQL.MySQLDB;
+import Product.Product;
+import Product.ProductFactory;
+
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import Ticket.*;
 
 import static Validation.Validation.*;
+
+import static Validation.Validation.validateInt;
 
 public class Menu {
     public static void start() {
@@ -31,10 +42,10 @@ public class Menu {
                     //createFlowerShop();
                     break;
                 case 2:
-                    addProduct(db);
+                    //addProduct();
                     break;
                 case 3:
-                    removeStock(db);
+                    //removeStock();
                     break;
                 case 4:
                     //showStock();
@@ -72,7 +83,7 @@ public class Menu {
         } while (option != 0);
     }
 
-    public static void addProduct(DataBase db) {
+    public static void addProduct() {
         int option = 0;
         int type = 0;
 
@@ -89,7 +100,7 @@ public class Menu {
                 addStock();
                 break;
             case 2:
-                createNewProduct(db);
+                createNewProduct();
                 break;
         }
     }
@@ -98,10 +109,25 @@ public class Menu {
         int productID = validateInt("Which is the ID of the product you want to add?");
         int quantity = validateInt("How many do you want to add?");
 
-        //Falta código con sql
+        //Falta código con sql y revisar cuadre stock (validaciones)
+
+        //Falta testear esta query
+        try {
+            Connection con = MySQLDB.connect();
+
+            Statement stmt = con.createStatement();
+
+            stmt.executeUpdate(
+                    "\"UPDATE producto SET stock = " + quantity + " WHERE producto.id = " + productID);
+
+        } catch (SQLException e) {
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
+        }
+        System.out.println("Se ha ejecutado");
     }
 
-    public static void createNewProduct(DataBase db) {
+    public static void createNewProduct() {
         int type = 0;
         do {
             type = validateInt("What type of product would you like to add?" +
@@ -132,14 +158,13 @@ public class Menu {
         int quantity = validateInt("How many do you want to add?");
 
         try {
-            Connection con = db.connect();
+            Connection con = MySQLDB.connect();
+
             Statement stmt = con.createStatement();
 
-            int rs = stmt.executeUpdate(
+            stmt.executeUpdate(
                     "INSERT INTO product (price, stock, type ) " +
                             "VALUES (" + newProduct.getPrice() + ", " + quantity + ", '" + typeString + "')");
-
-            System.out.println(rs);
 
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
@@ -148,38 +173,59 @@ public class Menu {
         System.out.println("Se ha ejecutado");
     }
 
-    public static void removeStock(DataBase db) {
-        //Revisar cuadre stock (validaciones) y que producto exista
+    public static void removeProduct() {
+
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+
+        //Falta testear esta query
+        try {
+            Connection con = MySQLDB.connect();
+
+            Statement stmt = con.createStatement();
+
+            stmt.executeUpdate(
+                    "\"DELETE FROM producto WHERE producto.id = " + productID);
+
+        } catch (SQLException e) {
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
+        }
+        System.out.println("Se ha ejecutado");
+
+    }
+
+    public static void removeStock() {
 
         int productID = validateInt("Which is the ID of the product you want to remove?");
         int quantityToRemove = validateInt("How many do you want to remove?");
-        Connection con = db.connect();
+        int newQuantity = 0;
+        int actualQuantity = 0;
+
+        //Falta revisar cuadre stock (validaciones)
+
+        //Falta testear esta query
 
         try {
-            PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
-            stmt.setInt(1, productID);
-            ResultSet rs = stmt.executeQuery();
+            Connection con = MySQLDB.connect();
+            Statement stmt = con.createStatement();
 
-            int actualQuantity = 0;
-            if (rs.next()) {
-                actualQuantity = rs.getInt("stock");
-            }
-            int newQuantity = actualQuantity - quantityToRemove;
+            ResultSet rs = stmt.executeQuery("SELECT stock FROM product WHERE id_product = " + productID);
 
-            stmt = con.prepareStatement("UPDATE product SET stock = ? WHERE id_product = ?");
-            stmt.setInt(1, newQuantity);
-            stmt.setInt(2, productID);
-            stmt.executeUpdate();
+            actualQuantity = rs.getInt("stock");
+
+            newQuantity = actualQuantity - quantityToRemove;
+
+            int prueba = stmt.executeUpdate(
+                    "\"UPDATE product SET stock = " + newQuantity + " WHERE id_product = " + productID);
 
         } catch (SQLException e) {
-            System.err.println("Error updating the product stock." + e);
-        } finally {
-            db.disconnect(con);
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
         }
+        System.out.println("Se ha ejecutado");
     }
 
     public static void generateJSON(Ticket ticket, String name) {
-
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
@@ -193,7 +239,6 @@ public class Menu {
     }
 
     public static void readJSON(String name) {
-
 
         try {
             FileInputStream Archivo = new FileInputStream(name + ".ser");
