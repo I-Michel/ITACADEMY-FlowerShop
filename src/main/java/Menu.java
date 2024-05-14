@@ -3,12 +3,24 @@ import Connection.MySQL.*;
 import Connection.MongoDB.*;
 import FlowerShop.FlowerShop;
 import Product.*;
+
 import java.io.*;
+
+import Connection.MySQL.MySQLDB;
+import Product.Product;
+import Product.ProductFactory;
+
+import java.sql.ResultSet;
 import java.sql.Statement;
+
 import java.sql.Connection;
 import java.sql.SQLException;
+
 import Ticket.*;
+
 import static Validation.Validation.*;
+
+import static Validation.Validation.validateInt;
 
 public class Menu {
     public static void start() {
@@ -30,7 +42,7 @@ public class Menu {
                     //createFlowerShop();
                     break;
                 case 2:
-                    addProduct();
+                    //addProduct();
                     break;
                 case 3:
                     //removeStock();
@@ -97,7 +109,22 @@ public class Menu {
         int productID = validateInt("Which is the ID of the product you want to add?");
         int quantity = validateInt("How many do you want to add?");
 
-        //Falta código con sql
+        //Falta código con sql y revisar cuadre stock (validaciones)
+
+        //Falta testear esta query
+        try {
+            Connection con = MySQLDB.connect();
+
+            Statement stmt = con.createStatement();
+
+            stmt.executeUpdate(
+                    "\"UPDATE producto SET stock = " + quantity + " WHERE producto.id = " + productID);
+
+        } catch (SQLException e) {
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
+        }
+        System.out.println("Se ha ejecutado");
     }
 
     public static void createNewProduct() {
@@ -135,11 +162,9 @@ public class Menu {
 
             Statement stmt = con.createStatement();
 
-            int rs = stmt.executeUpdate(
+            stmt.executeUpdate(
                     "INSERT INTO product (price, stock, type ) " +
                             "VALUES (" + newProduct.getPrice() + ", " + quantity + ", '" + typeString + "')");
-
-            System.out.println(rs);
 
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
@@ -148,15 +173,59 @@ public class Menu {
         System.out.println("Se ha ejecutado");
     }
 
-    public static void removeStock() {
-        int productID = validateInt("Which is the ID of the product you want to remove?");
-        int quantity = validateInt("How many do you want to remove?");
+    public static void removeProduct() {
 
-        //Falta código con sql y revisar cuadre stock (validaciones)
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+
+        //Falta testear esta query
+        try {
+            Connection con = MySQLDB.connect();
+
+            Statement stmt = con.createStatement();
+
+            stmt.executeUpdate(
+                    "\"DELETE FROM producto WHERE producto.id = " + productID);
+
+        } catch (SQLException e) {
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
+        }
+        System.out.println("Se ha ejecutado");
+
+    }
+
+    public static void removeStock() {
+
+        int productID = validateInt("Which is the ID of the product you want to remove?");
+        int quantityToRemove = validateInt("How many do you want to remove?");
+        int newQuantity = 0;
+        int actualQuantity = 0;
+
+        //Falta revisar cuadre stock (validaciones)
+
+        //Falta testear esta query
+
+        try {
+            Connection con = MySQLDB.connect();
+            Statement stmt = con.createStatement();
+
+            ResultSet rs = stmt.executeQuery("SELECT stock FROM product WHERE id_product = " + productID);
+
+            actualQuantity = rs.getInt("stock");
+
+            newQuantity = actualQuantity - quantityToRemove;
+
+            int prueba = stmt.executeUpdate(
+                    "\"UPDATE product SET stock = " + newQuantity + " WHERE id_product = " + productID);
+
+        } catch (SQLException e) {
+            System.err.println("Falta escribir mensaje error");
+            System.err.printf(e.getMessage());
+        }
+        System.out.println("Se ha ejecutado");
     }
 
     public static void generateJSON(Ticket ticket, String name) {
-
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
@@ -171,7 +240,6 @@ public class Menu {
 
     public static void readJSON(String name) {
 
-
         try {
             FileInputStream Archivo = new FileInputStream(name + ".ser");
             ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
@@ -182,5 +250,4 @@ public class Menu {
             System.out.println(e.getMessage());
         }
     }
-
 }

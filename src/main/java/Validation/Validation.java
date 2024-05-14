@@ -30,12 +30,9 @@ public class Validation {
             System.out.println(message);
             try {
                 outputInt = sc.nextInt();
-                sc.nextLine();
                 ok = true;
             } catch (InputMismatchException e) {
-
-                //Falta escribir mensaje error
-                System.err.println("Falta escribir mensaje error");
+                System.out.println(e.getMessage());
                 sc.nextLine();
             }
         } while (!ok);
@@ -53,9 +50,7 @@ public class Validation {
                 outputFloat = sc.nextFloat();
                 ok = true;
             } catch (InputMismatchException e) {
-
-                //Falta escribir mensaje error
-                System.err.println("");
+                System.out.println(e.getMessage());
                 sc.nextLine();
             }
         } while (!ok);
@@ -66,20 +61,21 @@ public class Validation {
     public static String validateColor(String message) {
         boolean ok = false;
         Scanner sc = new Scanner(System.in);
-        String color = "";
 
+        String color = sc.nextLine();
         do {
             System.out.println(message);
-
-            color = sc.nextLine();
-
             if (color.matches("[a-zA-Z]+(\\s+[a-zA-Z]+)*(\\s+\\d+)?")) {
                 ok = true;
             } else {
-                System.err.println("Expected color name or color name followed by a number.");
+                System.out.println("Expected color name or color name followed by a number.");
             }
         } while (!ok);
 
         return color;
+    }
+
+    public static String validateText(String text){
+        return text;
     }
 }
