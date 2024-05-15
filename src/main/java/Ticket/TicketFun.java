@@ -13,6 +13,12 @@ import Product.Flower;
 import Product.Decoration;
 import Product.Decoration.Material;
 public class TicketFun {
+
+    public static void generateTicket(){
+
+
+
+    }
     public static void createTicket(Ticket ticket) {
     try {
         //inserta valores a ticket
