@@ -12,17 +12,46 @@ import Product.Tree;
 import Product.Flower;
 import Product.Decoration;
 import Product.Decoration.Material;
-public class TicketFun {
+import Connection.*;
 
-    public static void generateTicket(){
+import static Validation.Validation.validateInt;
+
+public class TicketFun {
+//
+    public static void generateTicket(DataBase db){
+        Ticket actualTicket=new Ticket();
+        System.out.println("Se ha generado un ticket que deseas hacer");//
+        int option = 0;
+        Boolean ok=false;
+        do {
+            option = validateInt(" \n1. Add product ticket.  \n2. Remove product. \n" +
+                    "3. Show actual ticket \n4.Finish Ticket ");
+
+            switch (option) {
+                case 1:
+                    actualTicket=addProductTicket(actualTicket,db);
+                    break;
+                case 2:
+                    actualTicket=removeProductTicket(actualTicket);
+                    break;
+                case 3:
+                    actualTicket.toString();
+                    break;
+                case 4:
+                    createTicket(actualTicket,db);
+                    ok=true;
+                    break;
+
+            }
+        } while (!ok);
 
 
 
     }
-    public static void createTicket(Ticket ticket) {
+    public static void createTicket(Ticket ticket,DataBase db) {
     try {
         //inserta valores a ticket
-        Connection con = MySQLDB.connect();
+        Connection con = db.connect();
         PreparedStatement stmt = con.prepareStatement(QueriesMySQL.INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
 
         stmt.setTimestamp(1, ticket.tsdate());
@@ -33,7 +62,7 @@ public class TicketFun {
         int ticketId = rs.getInt(1);
         ticket.setTicketId(ticketId);
         //Inserta valores a product_ticket
-        PreparedStatement stmtprodid = con.prepareStatement("select * from product",Statement.RETURN_GENERATED_KEYS);
+        //PreparedStatement stmtprodid = con.prepareStatement("select * from product",Statement.RETURN_GENERATED_KEYS);
         HashMap<Product, Integer> productList = ticket.getProductList();
 
         for (Map.Entry<Product, Integer> entry : productList.entrySet()) {
@@ -53,11 +82,25 @@ public class TicketFun {
         System.err.println("Falta escribir mensaje error");
         System.err.printf(e.getMessage());
     }}
-    public static Product prodCreator(int idProd) {
+    public static Ticket addProductTicket(Ticket actualTicket,DataBase db){
+        //Show Stock
+        int idProd=validateInt("Which is the ID of the product you want to add?");
+        Product
+        if (actualTicket.getProductList().containsKey(idProd)) {
+
+            System.out.println("The product ID " + idProd + " already exists in the ticket. Incrementing the quantity.");
+            int quantitytoadd = validateInt("How many additional units of the product do you want to add?");
+
+        actualTicket.getProductList().put(actualTicket.getProductList().get(idProd),quantitytoadd+actualTicket.getProductList().get(idProd).intValue());
+        }
+        //Modificar Stock
+        return actualTicket;
+    }
+    public static Product prodCreator(int idProd, DataBase db) {
 
 
         try {
-            Connection con = MySQLDB.connect();
+            Connection con = db.connect();
             PreparedStatement stmt = con.prepareStatement(
                     QueriesMySQL.SELECT_PRODUCT);
 
@@ -96,4 +139,17 @@ public class TicketFun {
 
         System.out.println("Se ha ejecutado");
         return null;
-    }}
+    }
+    public static Ticket removeProductTicket(Ticket actualTicket){
+         System.out.println(actualTicket.toString());
+    //validation producto en el ticket
+         int iRemove=validateInt("Which is the Index of the product you want to remove?");
+
+        if (iRemove>0||iRemove<actualTicket.getProductList().size()){
+        actualTicket.getProductList().remove(iRemove);
+    }
+        else { System.out.println("No corresponde con ningun núm del indice ");}//traducir
+
+    //add a stock
+    return actualTicket;
+}}

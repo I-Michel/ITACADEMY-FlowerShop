@@ -7,6 +7,7 @@ import java.io.*;
 import java.sql.*;
 import Ticket.*;
 
+import static Ticket.TicketFun.generateTicket;
 import static Validation.Validation.*;
 
 public class Menu {
@@ -47,10 +48,10 @@ public class Menu {
                     //calculateTotalValue();
                     break;
                 case 8:
-                    //generateTicket();
+                    generateTicket(db);
                     break;
                 case 9:
-                    TicketFun.prodCreator(2);
+                    //ShowTicket();
                     break;
                 case 10:
                     //displayPurchases();

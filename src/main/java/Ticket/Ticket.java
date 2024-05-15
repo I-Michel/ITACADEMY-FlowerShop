@@ -18,8 +18,14 @@ public class Ticket {
     private float price;
     private HashMap<Product,Integer> productList;
 
+    public Ticket(){
+        ticketId=0;
+        date=new Date();
+        productList =  new HashMap<Product,Integer>();
+        price=calculateTotalPrice();
+    }
 
-    private Ticket(int ticketId, Date date) {
+    public Ticket(int ticketId, Date date) {
         this.ticketId = ticketId;
         this.date = date;
         productList =  new HashMap<Product,Integer>();
@@ -42,19 +48,7 @@ public class Ticket {
 
         //restar en stock
     };
-    private void removeProductTicket(Ticket actualTicket){
-        System.out.println(actualTicket.toString());
-        //validation producto en el ticket
-        int iRemove=validateInt("Which is the Index of the product you want to remove?");
 
-        if (iRemove>0||iRemove<actualTicket.getProductList().size()){
-            actualTicket.getProductList().remove(iRemove);
-        }
-        else { System.out.println("No corresponde con ningun núm del indice ");}//traducir
-        //remove
-        //add a stock
-
-    };
 
     public Date getDate() {
         return date;
