@@ -1,4 +1,4 @@
-package Validation;
+﻿package Validation;
 
 import Product.Product;
 import Exception.EmptyStockException;
