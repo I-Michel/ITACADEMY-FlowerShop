@@ -14,11 +14,6 @@ public class Decoration extends Product {
         this.MATERIAL = material;
     }
 
-    public Decoration(float price, Material material, int id) {
-        super(price, id);
-        this.MATERIAL = material;
-    }
-
     public Material getMATERIAL() {
         return MATERIAL;
     }
@@ -30,6 +25,6 @@ public class Decoration extends Product {
 
     @Override
     public String toString() {
-        return "- Decoration: ID " + this.id + " - Material: " + this.MATERIAL + " - Price: " + super.price + " €";
+        return "- Decoration (" + this.MATERIAL + "). Price: " + super.price + " €";
     }
 }

@@ -5,6 +5,7 @@ import FlowerShop.FlowerShop;
 import Product.*;
 import java.io.*;
 import java.sql.*;
+
 import Ticket.*;
 
 import static Validation.Validation.*;
@@ -19,49 +20,44 @@ public class Menu {
         System.out.println("Welcome to " + flowerShop.getName() + " Flower Shop! Please choose an option:");
 
         do {
-            option = validateInt("0. Close app. \n1. Create flower shop. \n2. Add product. \n3. Remove product. \n" +
-                    "4. Show stock details. \n5. Show product stock. \n6. Show total stock \n7. Show stock value. \n8. Generate ticket \n" +
-                    "9. Show ticket.\n10. Display purchases. \n11. Show total profit \n12. Generate JSON from ticket \n13. Read ticket from JSON");
+            option = validateInt("0. Close app. \n1. Add product. \n2. Remove product. \n" +
+                    "3. Show stock details. \n4. Show product stock. \n5. Show total stock \n6. Show stock value. \n7. Generate ticket \n" +
+                    "8. Show ticket.\n9. Display purchases. \n10. Show total profit \n11. Generate JSON from ticket \n12. Read ticket from JSON");
 
             switch (option) {
                 case 1:
-                    // FALTA QUITAR Y ARREGLAR SWITCH
-                    //createFlowerShop();
+                    addOptions(db);
                     break;
                 case 2:
-                    addProduct(db);
+                    removeOptions(db);
                     break;
                 case 3:
-                    removeStock(db);
-                    break;
-                case 4:
                     //showStock();
                     break;
-                case 5:
+                case 4:
                     //calculateProductStock();
                     break;
-                case 6:
+                case 5:
                     //calculateTotalStock();
                     break;
-                case 7:
+                case 6:
                     //calculateTotalValue();
                     break;
-                case 8:
+                case 7:
                     //generateTicket();
                     break;
-                case 9:
+                case 8:
                     //showTicket();
-                case 10:
+                case 9:
                     //displayPurchases();
                     break;
-                case 11:
+                case 10:
                     //showProfit();
                     break;
-                case 12:
-
+                case 11:
                     //generateJSON(serializar ultimo ticket/Sc del nombre para el archivo);
                     break;
-                case 13:
+                case 12:
                     //readJSON(Sc nombre del ticket);
                     break;
                 default:
@@ -70,7 +66,8 @@ public class Menu {
         } while (option != 0);
     }
 
-    public static void addProduct(DataBase db) {
+    public static void addOptions(DataBase db) {
+        // Va a Flowershop
         int option = 0;
         int type = 0;
 
@@ -84,23 +81,45 @@ public class Menu {
 
         switch (option) {
             case 1:
-                addStock();
+                addStock(db);
                 break;
             case 2:
-                createNewProduct(db);
+                generateNewProduct(db);
                 break;
         }
     }
 
-    public static void addStock() {
+    public static void addStock(DataBase db) {
+        // Va a MySQLDB
         int productID = validateInt("Which is the ID of the product you want to add?");
-        int quantity = validateInt("How many do you want to add?");
+        int quantityToAdd = validateInt("How many do you want to add?");
 
-        //Falta código con sql
+        try (Connection con = db.connect()) {
+            PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
+            stmt.setInt(1, productID);
+            ResultSet rs = stmt.executeQuery();
+
+            int actualQuantity = 0;
+            if (rs.next()) {
+                actualQuantity = rs.getInt("stock");
+            }
+            int newQuantity = actualQuantity + quantityToAdd;
+
+            stmt = con.prepareStatement("UPDATE product SET stock = ? WHERE id_product = ?");
+            stmt.setInt(1, newQuantity);
+            stmt.setInt(2, productID);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Error updating the product stock." + e);
+        }
     }
 
-    public static void createNewProduct(DataBase db) {
+    public static void generateNewProduct(DataBase db) {
+        // Va a MYSQLDB
+        // FALTA INSERTAR EN TABLA TYPE
         int type = 0;
+
         do {
             type = validateInt("What type of product would you like to add?" +
                     "\n1. Flower.\n2. Tree. \n3. Decoration");
@@ -129,31 +148,58 @@ public class Menu {
 
         int quantity = validateInt("How many do you want to add?");
 
-        try {
-            Connection con = db.connect();
-            Statement stmt = con.createStatement();
-
-            int rs = stmt.executeUpdate(
-                    "INSERT INTO product (price, stock, type ) " +
-                            "VALUES (" + newProduct.getPrice() + ", " + quantity + ", '" + typeString + "')");
-
-            System.out.println(rs);
-
-        } catch (SQLException e) {
-            System.err.println("Falta escribir mensaje error");
-            System.err.printf(e.getMessage());
-        }
-        System.out.println("Se ha ejecutado");
+        injectNewProduct(db, newProduct, typeString, quantity);
     }
 
-    public static void removeStock(DataBase db) {
-        //Revisar cuadre stock (validaciones) y que producto exista
+    public static void injectNewProduct(DataBase db, Product newProduct, String typeString, int quantity){
+        //Esto va a MySQL
+        //Falta comprobar query
+
+        try (Connection con = db.connect()){
+
+            PreparedStatement stmt = con.prepareStatement(
+                    "INSERT INTO product (price, stock, type ) VALUES ( ? , ? , '?')");
+
+            stmt.setFloat(1, newProduct.getPrice() );
+            stmt.setInt(2, quantity);
+            stmt.setString(3, typeString);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Error updating the product stock." + e);
+        }
+    }
+
+    public static void removeOptions(DataBase db) {
+        // Este método va a Flowershop
+
+        int option;
+        do {
+            option = validateInt("Would you like to empty the stock of a product or some of it?" +
+                    "\n1. Empty the stock of a product.\n2. Remove some stock of a product.");
+            if (option < 1 || option > 2) {
+                System.out.println("Please choose a valid option.");
+            }
+        } while (option < 1 || option > 2);
 
         int productID = validateInt("Which is the ID of the product you want to remove?");
-        int quantityToRemove = validateInt("How many do you want to remove?");
-        Connection con = db.connect();
+// Falta revisar que el producto exista
 
-        try {
+        if (option == 1) {
+            emptyProductStock(db, productID);
+        } else {
+            removeStock(db, productID);
+        }
+    }
+
+    public static void removeStock(DataBase db, int productID) {
+        // Este método va a MySQLDB
+        //Revisar cuadre stock (validaciones)
+
+        int quantityToRemove = validateInt("How many do you want to remove?");
+
+        try (Connection con = db.connect()) {
             PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
             stmt.setInt(1, productID);
             ResultSet rs = stmt.executeQuery();
@@ -171,12 +217,91 @@ public class Menu {
 
         } catch (SQLException e) {
             System.err.println("Error updating the product stock." + e);
-        } finally {
-            db.disconnect(con);
         }
     }
 
+    public static void emptyProductStock(DataBase db, int productID) {
+        // Este método va a MySQLDB
+
+        try (Connection con = db.connect()) {
+            PreparedStatement stmt = con.prepareStatement("UPDATE product SET stock = ? WHERE id_product = ?");
+            stmt.setInt(1, 0);
+            stmt.setInt(2, productID);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Error updating the product stock." + e);
+        }
+    }
+
+    public static void showStock(DataBase db) {
+        // Cambiar mensaje de error
+
+        try (Connection con = db.connect()) {
+
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM product WHERE stock != 0;");
+            ResultSet rs = stmt.executeQuery();
+
+            StringBuilder result = new StringBuilder();
+
+            String flowerQuery = "SELECT color FROM flower WHERE product_id = ?";
+            String treeQuery = "SELECT height FROM tree WHERE product_id = ?";
+            String decorationQuery = "SELECT material FROM decoration WHERE product_id = ?";
+
+            while (rs.next()) {
+                int productID = rs.getInt("id_product");
+                float price = rs.getFloat("price");
+                int stock = rs.getInt("stock");
+                String type = rs.getString("type");
+
+                Product product = null;
+                String sql = "";
+
+                switch (type) {
+                    case "FLOWER":
+                        sql = "SELECT color FROM flower WHERE product_id = ?";
+                        break;
+                    case "TREE":
+                        sql = "SELECT height FROM tree WHERE product_id = ?";
+                        break;
+                    case "DECORATION":
+                        sql = "SELECT material FROM decoration WHERE product_id = ?";
+                        break;
+                }
+
+                PreparedStatement stmt2 = con.prepareStatement(sql);
+                stmt.setInt(1, productID);
+                ResultSet rs2 = stmt2.executeQuery();
+
+                switch (type) {
+                    case "FLOWER":
+                        String color = rs.getString("color");
+                        product = new Flower(price, color, productID);
+                        break;
+                    case "TREE":
+                        sql = "SELECT height FROM tree WHERE product_id = ?";
+                        float height = rs.getFloat("height");
+                        product = new Tree(price, height, productID);
+                        break;
+                    case "DECORATION":
+                        sql = "SELECT material FROM decoration WHERE product_id = ?";
+                        Decoration.Material material = Decoration.Material.valueOf(rs.getString("material"));
+                        product = new Decoration(price, material, productID);
+                        break;
+                }
+                result.append(product).append(" - Stock: ").append(stock).append("\n");
+            }
+
+            System.out.println(result);
+
+        } catch (SQLException e) {
+            System.err.println("." + e);
+        }
+
+    }
+
     public static void generateJSON(Ticket ticket, String name) {
+
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
             ObjectOutputStream objectOutPutStream = new ObjectOutputStream(fileOutputStream);
@@ -189,6 +314,7 @@ public class Menu {
     }
 
     public static void readJSON(String name) {
+
         try {
             FileInputStream Archivo = new FileInputStream(name + ".ser");
             ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
