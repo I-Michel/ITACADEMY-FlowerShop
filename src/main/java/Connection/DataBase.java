@@ -5,5 +5,6 @@ import java.sql.Connection;
 public interface DataBase {
 
     Connection connect();
-    void disconnect(Connection con);
+//    void disconnect(Connection con);
+    // emptyAllProduct();
 }
