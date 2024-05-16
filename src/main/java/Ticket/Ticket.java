@@ -40,14 +40,6 @@ public class Ticket {
         }
         return price;
     }
-    public void addProductTicket(Product product){
-        //validation producto existe
-
-        //validation hay stock
-
-
-        //restar en stock
-    };
 
 
     public Date getDate() {
