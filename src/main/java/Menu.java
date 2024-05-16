@@ -8,7 +8,6 @@ import java.sql.*;
 
 import Ticket.*;
 
-import static Ticket.TicketFun.generateTicket;
 import static Validation.Validation.*;
 
 public class Menu {
@@ -49,11 +48,10 @@ public class Menu {
                     //calculateTotalValue();
                     break;
                 case 8:
-                    generateTicket(db);
+                    //generateTicket();
                     break;
                 case 9:
-                    //ShowTicket();
-                    break;
+                    //showTicket();
                 case 10:
                     //displayPurchases();
                     break;
@@ -158,9 +156,11 @@ public class Menu {
             Connection con = db.connect();
             Statement stmt = con.createStatement();
 
-            stmt.executeUpdate(
+            int rs = stmt.executeUpdate(
                     "INSERT INTO product (price, stock, type ) " +
                             "VALUES (" + newProduct.getPrice() + ", " + quantity + ", '" + typeString + "')");
+
+            System.out.println(rs);
 
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
@@ -299,7 +299,6 @@ public class Menu {
     }
 
     public static void generateJSON(Ticket ticket, String name) {
-
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
             ObjectOutputStream objectOutPutStream = new ObjectOutputStream(fileOutputStream);
@@ -312,7 +311,6 @@ public class Menu {
     }
 
     public static void readJSON(String name) {
-
         try {
             FileInputStream Archivo = new FileInputStream(name + ".ser");
             ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
