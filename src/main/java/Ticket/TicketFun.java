@@ -86,7 +86,7 @@ public class TicketFun {
         int idProdnew=validateInt("Which is the ID of the product you want to add?");
         boolean ok=false;
 
-        if (!ok){
+
         for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
             int prodId = entry.getKey().getId();
             Product product = entry.getKey();
@@ -96,17 +96,13 @@ public class TicketFun {
                 System.out.println("The product ID " + idProdnew + " already exists in the ticket. ");
                 int quantitytoadd = validateInt("How many additional units of the product do you want to add?");
                 actualTicket.getProductList().replace(product, (quantitytoadd + value));//si no provar con .put
+                ok=true;
             }
-
-
         }
+        if (ok==false){actualTicket.getProductList().put(prodCreator(idProdnew,db),validateInt("How many units of the product do you want to add?"));}
+
+
             //falta restar al stock
-
-
-
-        }
-        actualTicket.getProductList().put(prodCreator(idProdnew,db),validateInt("How many additional units of the product do you want to add?");
-
 
 
         //Modificar Stock
@@ -158,14 +154,18 @@ public class TicketFun {
     }
     public static Ticket removeProductTicket(Ticket actualTicket){
          System.out.println(actualTicket.toString());
-    //validation producto en el ticket
-         int iRemove=validateInt("Which is the Index of the product you want to remove?");
+        boolean ok=false;
+        int iRemove=validateInt("Which is the Index of the product you want to remove?");
+        for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
+            int prodId = entry.getKey().getId();
+            Product product = entry.getKey();
 
-        if (iRemove>0||iRemove<actualTicket.getProductList().size()){
-        actualTicket.getProductList().remove(iRemove);
-    }
-        else { System.out.println("No corresponde con ningun núm del indice ");}//traducir
+        if (iRemove==prodId){
+        actualTicket.getProductList().remove(product);
+            //add a stock
+    }}
+       if(ok==false) { System.out.println("No corresponde con ningun núm del indice ");}//traducir
 
-    //add a stock
+
     return actualTicket;
 }}
