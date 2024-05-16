@@ -32,12 +32,12 @@ public class MySQLDB implements DataBase {
         return null;
     }
 
-    @Override
+   /* @Override
     public void disconnect(Connection con) {
         try {
             con.close();
         } catch (SQLException e) {
             System.err.println("Error closing the database connection." + e);
         }
-    }
+    } */
 }
