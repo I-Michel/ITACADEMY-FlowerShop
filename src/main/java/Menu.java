@@ -1,8 +1,5 @@
 import Product.*;
-import Ticket.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import static Validation.Validation.validateInt;
@@ -12,7 +9,6 @@ public class Menu {
     static HashMap<Tree, Integer> treeList = new HashMap<>();
     static HashMap<Decoration, Integer> decorationList = new HashMap<>();
 
-    static ArrayList<Ticket> ticketList = new ArrayList<Ticket>();
 
     public static void start() {
         int option = 0;
@@ -91,8 +87,7 @@ public class Menu {
                     } else if (type == 2) {
                         treeList.put(ProductFactory.createTree(price, height), units);
                     } else if (type == 3) {
-                        decorationList.put(ProductFactory.createDecoration(price, material), units);
-                    }
+                        decorationList.put(ProductFactory.createDecoration(price, material), units);                    }
                     break;
                 default:
                     System.out.println("Invalid option.");
@@ -114,34 +109,4 @@ public class Menu {
                 System.out.println("Please choose one of the options.");
         }
     }
-
-    public static void generateTicket() {
-        Ticket actualTicket=new Ticket(LocalDateTime.now());
-        int option = 0;
-        do {
-            option = validateInt("\"0. Add product. \n1. Remove product. \n2. Show ticket. \n3.Generate Ticket");
-
-            switch (option) {
-                case 1:
-                    //que tipo producto quieres añadir
-                    //que producto quieres añadir
-                    //que cantidad de ese producto quieres añadir
-
-                    System.out.println("How many do you want to add?");//que tipo de
-                    break;
-                case 2:
-                    //que producto deseas quitar del ticket
-
-                    break;
-                case 3:
-                    System.out.println(actualTicket.toString());
-                    break;
-                case 4:
-                    break;
-                default:
-                    System.out.println("Please choose one of the options.");
-            }
-        }
-    }
 }
-

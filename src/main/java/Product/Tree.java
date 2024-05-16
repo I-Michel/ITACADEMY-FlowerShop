@@ -9,17 +9,22 @@ public class Tree extends Product {
         this.HEIGHT = height;
     }
 
+    public Tree(float price, float height, int id) {
+        super(price, id);
+        this.HEIGHT = height;
+    }
+
     public float getHEIGHT() {
         return HEIGHT;
     }
 
     @Override
-    public void showCareInstructions() {
+    public void getCareInstructions() {
         System.out.println("Water again when the soil is mostly dry.");
     }
 
     @Override
     public String toString() {
-        return "- Tree (" + this.HEIGHT + "). Price: " + super.price + " €";
+        return "- Tree: ID " + this.id + " - Height: " + this.HEIGHT + " - Price: " + super.price + " €";
     }
 }

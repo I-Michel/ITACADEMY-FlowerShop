@@ -14,17 +14,22 @@ public class Decoration extends Product {
         this.MATERIAL = material;
     }
 
+    public Decoration(float price, Material material, int id) {
+        super(price, id);
+        this.MATERIAL = material;
+    }
+
     public Material getMATERIAL() {
         return MATERIAL;
     }
 
     @Override
-    public void showCareInstructions() {
+    public void getCareInstructions() {
         System.out.println("Wipe gently with a wet cloth when needed.");
     }
 
     @Override
     public String toString() {
-        return "- Decoration (" + this.MATERIAL + "). Price: " + super.price + " €";
+        return "- Decoration: ID " + this.id + " - Material: " + this.MATERIAL + " - Price: " + super.price + " €";
     }
 }
