@@ -5,7 +5,6 @@ import FlowerShop.FlowerShop;
 import Product.*;
 import java.io.*;
 import java.sql.*;
-
 import Ticket.*;
 
 import static Validation.Validation.*;
@@ -30,10 +29,10 @@ public class Menu {
                     //createFlowerShop();
                     break;
                 case 2:
-                    addOptions(db);
+                    addProduct(db);
                     break;
                 case 3:
-                    removeOptions(db);
+                    removeStock(db);
                     break;
                 case 4:
                     //showStock();
@@ -71,8 +70,7 @@ public class Menu {
         } while (option != 0);
     }
 
-    public static void addOptions(DataBase db) {
-        // Va a Flowershop
+    public static void addProduct(DataBase db) {
         int option = 0;
         int type = 0;
 
@@ -86,7 +84,7 @@ public class Menu {
 
         switch (option) {
             case 1:
-                addStock(db);
+                addStock();
                 break;
             case 2:
                 createNewProduct(db);
@@ -94,35 +92,14 @@ public class Menu {
         }
     }
 
-    public static void addStock(DataBase db) {
-        // Va a MySQLDB
+    public static void addStock() {
         int productID = validateInt("Which is the ID of the product you want to add?");
-        int quantityToAdd = validateInt("How many do you want to add?");
+        int quantity = validateInt("How many do you want to add?");
 
-        try (Connection con = db.connect()) {
-            PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
-            stmt.setInt(1, productID);
-            ResultSet rs = stmt.executeQuery();
-
-            int actualQuantity = 0;
-            if (rs.next()) {
-                actualQuantity = rs.getInt("stock");
-            }
-            int newQuantity = actualQuantity + quantityToAdd;
-
-            stmt = con.prepareStatement("UPDATE product SET stock = ? WHERE id_product = ?");
-            stmt.setInt(1, newQuantity);
-            stmt.setInt(2, productID);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            System.err.println("Error updating the product stock." + e);
-        }
+        //Falta código con sql
     }
 
     public static void createNewProduct(DataBase db) {
-        // Va a MYSQLDB
-        // FALTA INSERTAR EN TABLA TYPE
         int type = 0;
         do {
             type = validateInt("What type of product would you like to add?" +
@@ -169,35 +146,14 @@ public class Menu {
         System.out.println("Se ha ejecutado");
     }
 
-    public static void removeOptions(DataBase db) {
-        // Este método va a Flowershop
-
-        int option;
-        do {
-            option = validateInt("Would you like to empty the stock of a product or some of it?" +
-                    "\n1. Empty the stock of a product.\n2. Remove some stock of a product.");
-            if (option < 1 || option > 2) {
-                System.out.println("Please choose a valid option.");
-            }
-        } while (option < 1 || option > 2);
+    public static void removeStock(DataBase db) {
+        //Revisar cuadre stock (validaciones) y que producto exista
 
         int productID = validateInt("Which is the ID of the product you want to remove?");
-// Falta revisar que el producto exista
-
-        if (option == 1) {
-            emptyProductStock(db, productID);
-        } else {
-            removeStock(db, productID);
-        }
-    }
-
-    public static void removeStock(DataBase db, int productID) {
-        // Este método va a MySQLDB
-        //Revisar cuadre stock (validaciones)
-
         int quantityToRemove = validateInt("How many do you want to remove?");
+        Connection con = db.connect();
 
-        try (Connection con = db.connect()) {
+        try {
             PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
             stmt.setInt(1, productID);
             ResultSet rs = stmt.executeQuery();
@@ -215,87 +171,9 @@ public class Menu {
 
         } catch (SQLException e) {
             System.err.println("Error updating the product stock." + e);
+        } finally {
+            db.disconnect(con);
         }
-    }
-
-    public static void emptyProductStock(DataBase db, int productID) {
-        // Este método va a MySQLDB
-
-        try (Connection con = db.connect()) {
-            PreparedStatement stmt = con.prepareStatement("UPDATE product SET stock = ? WHERE id_product = ?");
-            stmt.setInt(1, 0);
-            stmt.setInt(2, productID);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            System.err.println("Error updating the product stock." + e);
-        }
-    }
-
-    public static void showStock(DataBase db) {
-        // Cambiar mensaje de error
-
-        try (Connection con = db.connect()) {
-
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM product WHERE stock != 0;");
-            ResultSet rs = stmt.executeQuery();
-
-            StringBuilder result = new StringBuilder();
-
-            String flowerQuery = "SELECT color FROM flower WHERE product_id = ?";
-            String treeQuery = "SELECT height FROM tree WHERE product_id = ?";
-            String decorationQuery = "SELECT material FROM decoration WHERE product_id = ?";
-
-            while (rs.next()) {
-                int productID = rs.getInt("id_product");
-                float price = rs.getFloat("price");
-                int stock = rs.getInt("stock");
-                String type = rs.getString("type");
-
-                Product product = null;
-                String sql = "";
-
-                switch (type) {
-                    case "FLOWER":
-                        sql = "SELECT color FROM flower WHERE product_id = ?";
-                        break;
-                    case "TREE":
-                        sql = "SELECT height FROM tree WHERE product_id = ?";
-                        break;
-                    case "DECORATION":
-                        sql = "SELECT material FROM decoration WHERE product_id = ?";
-                        break;
-                }
-
-                PreparedStatement stmt2 = con.prepareStatement(sql);
-                stmt.setInt(1, productID);
-                ResultSet rs2 = stmt2.executeQuery();
-
-                switch (type) {
-                    case "FLOWER":
-                        String color = rs.getString("color");
-                        product = new Flower(price, color, productID);
-                        break;
-                    case "TREE":
-                        sql = "SELECT height FROM tree WHERE product_id = ?";
-                        float height = rs.getFloat("height");
-                        product = new Tree(price, height, productID);
-                        break;
-                    case "DECORATION":
-                        sql = "SELECT material FROM decoration WHERE product_id = ?";
-                        Decoration.Material material = Decoration.Material.valueOf(rs.getString("material"));
-                        product = new Decoration(price, material, productID);
-                        break;
-                }
-                result.append(product).append(" - Stock: ").append(stock).append("\n");
-            }
-
-            System.out.println(result);
-
-        } catch (SQLException e) {
-            System.err.println("." + e);
-        }
-
     }
 
     public static void generateJSON(Ticket ticket, String name) {
