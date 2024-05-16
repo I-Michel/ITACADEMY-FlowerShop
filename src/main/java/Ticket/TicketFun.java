@@ -49,9 +49,8 @@ public class TicketFun {
 
     }
     public static void createTicket(Ticket ticket,DataBase db) {
-    try {
-        //inserta valores a ticket
-        Connection con = db.connect();
+        try( Connection con = db.connect()){
+
         PreparedStatement stmt = con.prepareStatement(QueriesMySQL.INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
 
         stmt.setTimestamp(1, ticket.tsdate());
@@ -84,15 +83,32 @@ public class TicketFun {
     }}
     public static Ticket addProductTicket(Ticket actualTicket,DataBase db){
         //Show Stock
-        int idProd=validateInt("Which is the ID of the product you want to add?");
-        Product
-        if (actualTicket.getProductList().containsKey(idProd)) {
+        int idProdnew=validateInt("Which is the ID of the product you want to add?");
+        boolean ok=false;
 
-            System.out.println("The product ID " + idProd + " already exists in the ticket. Incrementing the quantity.");
-            int quantitytoadd = validateInt("How many additional units of the product do you want to add?");
+        if (!ok){
+        for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
+            int prodId = entry.getKey().getId();
+            Product product = entry.getKey();
+            int value = entry.getValue();
+            if (idProdnew == prodId) {
 
-        actualTicket.getProductList().put(actualTicket.getProductList().get(idProd),quantitytoadd+actualTicket.getProductList().get(idProd).intValue());
+                System.out.println("The product ID " + idProdnew + " already exists in the ticket. ");
+                int quantitytoadd = validateInt("How many additional units of the product do you want to add?");
+                actualTicket.getProductList().replace(product, (quantitytoadd + value));//si no provar con .put
+            }
+
+
         }
+            //falta restar al stock
+
+
+
+        }
+        actualTicket.getProductList().put(prodCreator(idProdnew,db),validateInt("How many additional units of the product do you want to add?");
+
+
+
         //Modificar Stock
         return actualTicket;
     }
