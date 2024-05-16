@@ -74,8 +74,4 @@ public class Validation {
 
         return color;
     }
-
-    public static String validateText(String text){
-        return text;
-    }
 }

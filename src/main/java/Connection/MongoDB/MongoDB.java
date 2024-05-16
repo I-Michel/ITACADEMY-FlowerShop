@@ -29,18 +29,4 @@ public class MongoDB implements DataBase {
     public void disconnect(Connection con) {
 
     }
-
-
-    /* public static Connection connect() {
-        try {
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stmt = con.createStatement();
-            stmt.executeQuery("USE flowershop");
-            return con;
-        } catch (SQLException e) {
-            System.err.println("Falta escribir mensaje error");
-            System.err.printf(e.getMessage());
-        }
-        return null;
-    } */
 }

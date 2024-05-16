@@ -6,7 +6,7 @@ import static Validation.Validation.*;
 public class ProductFactory {
 
     public static Flower createFlower() {
-        String color = validateText("Which is the color of the new flower?");
+        String color = validateColor("Which is the color of the new flower?");
         float price = validateFloat("Which is the price of the new product?");
 
         return new Flower(price, color);

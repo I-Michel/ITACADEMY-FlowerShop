@@ -19,49 +19,44 @@ public class Menu {
         System.out.println("Welcome to " + flowerShop.getName() + " Flower Shop! Please choose an option:");
 
         do {
-            option = validateInt("0. Close app. \n1. Create flower shop. \n2. Add product. \n3. Remove product. \n" +
-                    "4. Show stock details. \n5. Show product stock. \n6. Show total stock \n7. Show stock value. \n8. Generate ticket \n" +
-                    "9. Show ticket.\n10. Display purchases. \n11. Show total profit \n12. Generate JSON from ticket \n13. Read ticket from JSON");
+            option = validateInt("0. Close app. \n1. Add product. \n2. Remove product. \n" +
+                    "3. Show stock details. \n4. Show product stock. \n5. Show total stock \n6. Show stock value. \n7. Generate ticket \n" +
+                    "8. Show ticket.\n9. Display purchases. \n10. Show total profit \n11. Generate JSON from ticket \n12. Read ticket from JSON");
 
             switch (option) {
                 case 1:
-                    // FALTA QUITAR Y ARREGLAR SWITCH
-                    //createFlowerShop();
+                    addOptions(db);
                     break;
                 case 2:
-                    addProduct(db);
+                    removeOptions(db);
                     break;
                 case 3:
-                    removeStock(db);
-                    break;
-                case 4:
                     //showStock();
                     break;
-                case 5:
+                case 4:
                     //calculateProductStock();
                     break;
-                case 6:
+                case 5:
                     //calculateTotalStock();
                     break;
-                case 7:
+                case 6:
                     //calculateTotalValue();
                     break;
-                case 8:
+                case 7:
                     //generateTicket();
                     break;
-                case 9:
+                case 8:
                     //showTicket();
-                case 10:
+                case 9:
                     //displayPurchases();
                     break;
-                case 11:
+                case 10:
                     //showProfit();
                     break;
-                case 12:
-
+                case 11:
                     //generateJSON(serializar ultimo ticket/Sc del nombre para el archivo);
                     break;
-                case 13:
+                case 12:
                     //readJSON(Sc nombre del ticket);
                     break;
                 default:
@@ -70,7 +65,7 @@ public class Menu {
         } while (option != 0);
     }
 
-    public static void addProduct(DataBase db) {
+    public static void addOptions(DataBase db) {
         int option = 0;
         int type = 0;
 
@@ -87,7 +82,7 @@ public class Menu {
                 addStock();
                 break;
             case 2:
-                createNewProduct(db);
+                generateNewProduct(db);
                 break;
         }
     }
@@ -99,8 +94,12 @@ public class Menu {
         //Falta código con sql
     }
 
-    public static void createNewProduct(DataBase db) {
+    public static void generateNewProduct(DataBase db) {
+
+        //Esto va a la flowershop
+
         int type = 0;
+
         do {
             type = validateInt("What type of product would you like to add?" +
                     "\n1. Flower.\n2. Tree. \n3. Decoration");
@@ -129,19 +128,31 @@ public class Menu {
 
         int quantity = validateInt("How many do you want to add?");
 
-        try {
-            Connection con = db.connect();
-            Statement stmt = con.createStatement();
+        injectNewProduct(db, newProduct, typeString, quantity);
+    }
 
-            stmt.executeUpdate(
-                    "INSERT INTO product (price, stock, type ) " +
-                            "VALUES (" + newProduct.getPrice() + ", " + quantity + ", '" + typeString + "')");
+    public static void injectNewProduct(DataBase db, Product newProduct, String typeString, int quantity){
+        //Esto va a MySQL
+        //Falta comprobar query
+
+        try (Connection con = db.connect()){
+
+            PreparedStatement stmt = con.prepareStatement(
+                    "INSERT INTO product (price, stock, type ) VALUES ( ? , ? , '?')");
+
+            stmt.setFloat(1, newProduct.getPrice() );
+            stmt.setInt(2, quantity);
+            stmt.setString(3, typeString);
+
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.err.println("Falta escribir mensaje error");
-            System.err.printf(e.getMessage());
+            System.err.println("Error updating the product stock." + e);
         }
-        System.out.println("Se ha ejecutado");
+    }
+
+    public static void removeOptions(DataBase db){
+
     }
 
     public static void removeStock(DataBase db) {
@@ -149,9 +160,8 @@ public class Menu {
 
         int productID = validateInt("Which is the ID of the product you want to remove?");
         int quantityToRemove = validateInt("How many do you want to remove?");
-        Connection con = db.connect();
 
-        try {
+        try (Connection con = db.connect()) {
             PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
             stmt.setInt(1, productID);
             ResultSet rs = stmt.executeQuery();
@@ -169,9 +179,23 @@ public class Menu {
 
         } catch (SQLException e) {
             System.err.println("Error updating the product stock." + e);
-        } finally {
-            db.disconnect(con);
         }
+    }
+
+    public static void emptyProductStock(DataBase db){
+
+    }
+
+    public static void calculateProductStock(DataBase db){
+
+    }
+
+    public static void calculateTotalStock(DataBase db){
+
+    }
+
+    public static void calculateTotalValue(DataBase db){
+
     }
 
     public static void generateJSON(Ticket ticket, String name) {
