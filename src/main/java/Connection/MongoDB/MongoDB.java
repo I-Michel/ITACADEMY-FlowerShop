@@ -25,10 +25,10 @@ public class MongoDB implements DataBase {
         return null;
     }
 
-    /*@Override
+    @Override
     public void disconnect(Connection con) {
 
-    } */
+    }
 
 
     /* public static Connection connect() {
