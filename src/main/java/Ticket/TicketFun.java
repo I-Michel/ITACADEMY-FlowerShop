@@ -190,9 +190,9 @@ public class TicketFun {
                 int ticketId = rs.getInt("id_ticket");
                 Timestamp timestamp = rs.getTimestamp("date");
                 Date date = new Date(timestamp.getTime());
-                float price = rs.getFloat("price");
+                float tPrice = rs.getFloat("total_price");
                 HashMap<Product, Integer> productList = getProductsListFromTicketiD(ticketId, db);
-                Ticket ticketActual = new Ticket(ticketId, date, productList, price);
+                Ticket ticketActual = new Ticket(ticketId, date, productList, tPrice);
                 ticketList.add(ticketActual);
 
             }
