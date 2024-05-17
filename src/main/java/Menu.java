@@ -79,8 +79,10 @@ public class Menu {
         int type = 0;
 
         do {
-            option = validateInt("Is it an existing product or a new one?" +
-                    "\n1. Existing product.\n2. New product.");
+            option = validateInt("""
+                    Is it an existing product or a new one?\s
+                    1. Existing product.\s
+                    2. New product.""");
             if (option < 1 || option > 2) {
                 System.out.println("Please choose a valid option.");
             }
@@ -225,9 +227,8 @@ public class Menu {
         int option;
         do {
             option = validateInt("""
-                    Would you like to empty the stock of a product or some of it?\
-
-                    1. Empty the stock of a product.
+                    Would you like to empty the stock of a product or some of it?\s
+                    1. Empty the stock of a product.\s
                     2. Remove some stock of a product.""");
             if (option < 1 || option > 2) {
                 System.out.println("Please choose a valid option.");
