@@ -3,6 +3,7 @@ import Connection.MySQL.*;
 import Connection.MongoDB.*;
 import FlowerShop.FlowerShop;
 import Product.*;
+
 import java.io.*;
 import java.sql.*;
 
@@ -32,16 +33,17 @@ public class Menu {
                     removeOptions(db);
                     break;
                 case 3:
-                    //showStock();
+                    showStock(db);
                     break;
                 case 4:
-                    //calculateProductStock();
+                    //calculateProductStock(db);
+                    // SOBRA
                     break;
                 case 5:
-                    //calculateTotalStock();
+                    //calculateStock(db);
                     break;
                 case 6:
-                    //calculateTotalValue();
+                    //calculateTotalValue(db);
                     break;
                 case 7:
                     //generateTicket();
@@ -151,18 +153,56 @@ public class Menu {
         injectNewProduct(db, newProduct, typeString, quantity);
     }
 
-    public static void injectNewProduct(DataBase db, Product newProduct, String typeString, int quantity){
+    public static void injectNewProduct(DataBase db, Product newProduct, String typeString, int quantity) {
         //Esto va a MySQL
         //Falta comprobar query
 
-        try (Connection con = db.connect()){
+        try (Connection con = db.connect()) {
 
             PreparedStatement stmt = con.prepareStatement(
-                    "INSERT INTO product (price, stock, type ) VALUES ( ? , ? , '?')");
+                    "INSERT INTO product (price, stock, type ) VALUES ( ? , ? , '?')",
+                    PreparedStatement.RETURN_GENERATED_KEYS);
 
-            stmt.setFloat(1, newProduct.getPrice() );
+            stmt.setFloat(1, newProduct.getPrice());
             stmt.setInt(2, quantity);
             stmt.setString(3, typeString);
+
+            int affectedRows = stmt.executeUpdate();
+            int newId = 0;
+
+            if (affectedRows > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        newId = rs.getInt(1);
+                    }
+                }
+            }
+
+            String sql = "";
+
+            switch (typeString) {
+                case "FLOWER":
+                    sql = "INSERT INTO flower (color) VALUES (?) WHERE product_id = ?";
+                    stmt = con.prepareStatement(sql);
+                    Flower newFlower = (Flower) newProduct;
+                    stmt.setString(1, newFlower.getCOLOR());
+                    stmt.setInt(2, newId);
+                    break;
+                case "TREE":
+                    sql = "INSERT INTO tree (height) VALUES (?) WHERE product_id = ?";
+                    stmt = con.prepareStatement(sql);
+                    Tree newTree = (Tree) newProduct;
+                    stmt.setFloat(1, newTree.getHEIGHT());
+                    stmt.setInt(2, newId);
+                    break;
+                case "DECORATION":
+                    sql = "INSERT INTO decoration (material) VALUES (?) WHERE product_id = ?";
+                    stmt = con.prepareStatement(sql);
+                    Decoration newDecoration = (Decoration) newProduct;
+                    stmt.setString(1, newDecoration.getMATERIAL().name());
+                    stmt.setInt(2, newId);
+                    break;
+            }
 
             stmt.executeUpdate();
 
@@ -236,6 +276,9 @@ public class Menu {
 
     public static void showStock(DataBase db) {
         // Cambiar mensaje de error
+        // Esto va a MySQL
+        // Pendiente ver si podemos optimizar
+        // Falta testear
 
         try (Connection con = db.connect()) {
 
@@ -243,10 +286,6 @@ public class Menu {
             ResultSet rs = stmt.executeQuery();
 
             StringBuilder result = new StringBuilder();
-
-            String flowerQuery = "SELECT color FROM flower WHERE product_id = ?";
-            String treeQuery = "SELECT height FROM tree WHERE product_id = ?";
-            String decorationQuery = "SELECT material FROM decoration WHERE product_id = ?";
 
             while (rs.next()) {
                 int productID = rs.getInt("id_product");
@@ -297,7 +336,6 @@ public class Menu {
         } catch (SQLException e) {
             System.err.println("." + e);
         }
-
     }
 
     public static void generateJSON(Ticket ticket, String name) {
