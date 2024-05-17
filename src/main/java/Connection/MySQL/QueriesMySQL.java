@@ -1,6 +1,10 @@
 package Connection.MySQL;
 
 public class QueriesMySQL {
+    public static final String SELECT_TICKETS = "SELECT t.id_ticket, t.date, t.total_price " +
+            "FROM ticket t " +
+            "INNER JOIN product_in_ticket pt ON t.id_ticket = pt.ticket_id " +
+            "INNER JOIN product p ON pt.product_id = p.id_product;";
     public static final String INSERT_TICKET = "INSERT INTO ticket(date, total_Price) VALUES(?, ?)";
     public static final String INSERT_PRODUCT_TICKET="INSERT INTO product_in_ticket(quantity, ticket_id, product_id, ) VALUES(?, ?, ?)";
 

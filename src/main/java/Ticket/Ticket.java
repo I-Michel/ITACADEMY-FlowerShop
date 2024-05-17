@@ -25,11 +25,11 @@ public class Ticket {
         price=calculateTotalPrice();
     }
 
-    public Ticket(int ticketId, Date date) {
+    public Ticket(int ticketId, Date date,HashMap<Product,Integer> ProductList,float price ) {
         this.ticketId = ticketId;
         this.date = date;
-        productList =  new HashMap<Product,Integer>();
-        price=calculateTotalPrice();
+        this.productList =  ProductList;
+        this.price=price;
     }
     public float calculateTotalPrice(){
         price=0;
