@@ -129,9 +129,8 @@ public class Menu {
 
         do {
             type = validateInt("""
-                    What type of product would you like to add?\
-
-                    1. Flower.
+                    What type of product would you like to add?\s
+                    1. Flower.\s
                     2. Tree.\s
                     3. Decoration""");
             if (type < 1 || type > 3) {
