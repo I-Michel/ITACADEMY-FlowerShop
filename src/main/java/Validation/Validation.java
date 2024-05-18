@@ -3,22 +3,24 @@ package Validation;
 import Product.Product;
 import Exception.EmptyStockException;
 import Exception.NotEnoughStockException;
+
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Validation {
 
-    public static void validateStock(HashMap <Product, Integer> productStock, Product key ) throws EmptyStockException {
-       /* try{
-            if (productStock.isEmpty()) {
-                throw new EmptyStockException();
-            } else if ()(
-            throw new NotEnoughStockException();
-            )
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }*/
+    public static boolean validateStock(int actualStock, int updateStock) {
+        boolean result = false;
+
+        if (actualStock == 0) {
+            System.out.println("Cannot remove this product because actual stock is 0.");
+        } else if (updateStock > actualStock) {
+            System.out.println("Cannot remove " + updateStock + " items because actual stock is " + actualStock + " items.");
+        } else {
+            result = true;
+        }
+        return result;
     }
 
     public static int validateInt(String message) {
@@ -39,7 +41,7 @@ public class Validation {
         return outputInt;
     }
 
-    public static float validateFloat(String message){
+    public static float validateFloat(String message) {
         boolean ok = false;
         Scanner sc = new Scanner(System.in);
         float outputFloat = 0;
