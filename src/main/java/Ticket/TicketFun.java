@@ -51,7 +51,8 @@ public class TicketFun {
     }
 
     public static void createTicket(Ticket ticket, DataBase db) {
-        try (Connection con = db.connect()) {
+        Connection con = db.connect();
+        try  {
 
             PreparedStatement stmt = con.prepareStatement(QueriesMySQL.INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
 
@@ -60,23 +61,25 @@ public class TicketFun {
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
-            int ticketId = rs.getInt(1);
-            ticket.setTicketId(ticketId);
-            //Inserta valores a product_ticket
-            //PreparedStatement stmtprodid = con.prepareStatement("select * from product",Statement.RETURN_GENERATED_KEYS);
-            HashMap<Product, Integer> productList = ticket.getProductList();
 
-            for (Map.Entry<Product, Integer> entry : productList.entrySet()) {
-                Product prod = entry.getKey();
-                Integer quant = entry.getValue();
+            if(rs.next()) {
+                int ticketId = rs.getInt(1);
+                ticket.setTicketId(ticketId);
 
-                PreparedStatement stmtprodt = con.prepareStatement(QueriesMySQL.INSERT_PRODUCT_TICKET);
-                stmtprodt.setInt(1, ticketId);
-                stmtprodt.setInt(2, prod.getId());
-                stmtprodt.setInt(3, quant);
-                stmtprodt.executeUpdate();
+                HashMap<Product, Integer> productList = ticket.getProductList();
 
+                for (HashMap.Entry<Product, Integer> entry : productList.entrySet()) {
+                    Product prod = entry.getKey();
+                    Integer quant = entry.getValue();
+
+                    PreparedStatement stmtprodt = con.prepareStatement(QueriesMySQL.INSERT_PRODUCT_TICKET);
+                    stmtprodt.setInt(1, ticketId);
+                    stmtprodt.setInt(2, prod.getId());
+                    stmtprodt.setInt(3, quant);
+                    stmtprodt.executeUpdate();
+                }
             }
+
         } catch (SQLException e) {
             System.err.println("Falta escribir mensaje error");
             System.err.printf(e.getMessage());
@@ -193,7 +196,7 @@ public class TicketFun {
             Connection con = db.connect();
             PreparedStatement statement = con.prepareStatement(QueriesMySQL.SELECT_TICKETS);
             ResultSet rs = statement.executeQuery();
-
+            boolean sig=false;
 
             while (rs.next()) {
                 int ticketId = rs.getInt("id_ticket");
@@ -203,7 +206,7 @@ public class TicketFun {
                 HashMap<Product, Integer> productList = getProductsListFromTicketiD(ticketId, db);
                 Ticket ticketActual = new Ticket(ticketId, date, productList, tPrice);
                 ticketList.add(ticketActual);
-
+                sig=true;
             }
 
 
@@ -219,31 +222,33 @@ public class TicketFun {
     public static HashMap<Product, Integer> getProductsListFromTicketiD(int ticketId, DataBase db) throws SQLException {
         HashMap<Product, Integer> productList = new HashMap<>();
         try (Connection con = db.connect()) {
-            PreparedStatement stmt = con.prepareStatement(QueriesMySQL.SELECT_PRODUCT);
+            PreparedStatement stmt = con.prepareStatement(QueriesMySQL.SELECT_PRODUCT_TICKET);
 
                 stmt.setInt(1, ticketId);
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    int idProd = rs.getInt("product_id");
+                    int idProd = rs.getInt("id_product");
                     String type = rs.getString("type");
                     int price = rs.getInt("price");
                     String attribute = rs.getString("attribute");
-                    int quantity=rs.getInt(("quantity"));
+                    int quantity=rs.getInt("quantity");
                     switch (type) {
                         case "TREE":
 
                             Tree tree = new Tree(price, Integer.parseInt(attribute), idProd);
-                            System.out.print(tree);
                             productList.put(tree, quantity);
+                            break;
 
                         case "FLOWER":
                             Flower flower = new Flower(price, attribute, idProd);
                             productList.put(flower, quantity);
+                            break;
 
                         case "DECORATION":
                             Material material = Material.valueOf(attribute.toUpperCase());
                             Decoration decoration = new Decoration(price, material, idProd);
                             productList.put(decoration, quantity);
+                            break;
                     }
 
 
