@@ -184,7 +184,7 @@ public class TicketFun {
             System.out.println("No corresponde con ningun núm del indice ");
         }//traducir
 
-
+        actualTicket.calculateTotalPrice();
         return actualTicket;
     }
     public static ArrayList<Ticket> getTickets(DataBase db)  {
