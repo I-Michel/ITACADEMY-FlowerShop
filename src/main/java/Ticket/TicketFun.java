@@ -1,6 +1,7 @@
 package Ticket;
 import Connection.MySQL.MySQLDB;
 import Connection.MySQL.QueriesMySQL;
+import FlowerShop.FlowerShop;
 import Product.Product;
 import java.sql.*;
 import java.sql.PreparedStatement;
@@ -19,7 +20,7 @@ import static Validation.Validation.validateInt;
 
 public class TicketFun {
 //
-    public static void generateTicket(DataBase db){
+    public static Ticket generateTicket(DataBase db){
         Ticket actualTicket=new Ticket();
         System.out.println("Se ha generado un ticket que deseas hacer");//
         int option = 0;
@@ -45,7 +46,7 @@ public class TicketFun {
 
             }
         } while (!ok);
-
+    return actualTicket;
 
     }
 
@@ -98,6 +99,7 @@ public class TicketFun {
                 int quantitytoadd = validateInt("How many additional units of the product do you want to add?");
                 actualTicket.getProductList().replace(product, (quantitytoadd + value));//si no provar con .put
                 ok = true;
+
             }
         }
         if (ok == false) {
@@ -178,7 +180,7 @@ public class TicketFun {
 
         return actualTicket;
     }
-    public ArrayList<Ticket> getTickets(DataBase db)  {
+    public static ArrayList<Ticket> getTickets(DataBase db)  {
         ArrayList<Ticket> ticketList = new ArrayList<>();
         try {
             Connection con = db.connect();
@@ -207,7 +209,7 @@ public class TicketFun {
 
     }
 
-    public  HashMap<Product, Integer> getProductsListFromTicketiD(int ticketId, DataBase db) throws SQLException {
+    public static HashMap<Product, Integer> getProductsListFromTicketiD(int ticketId, DataBase db) throws SQLException {
         HashMap<Product, Integer> productList = new HashMap<>();
         try (Connection con = db.connect()) {
             PreparedStatement stmt = con.prepareStatement(QueriesMySQL.SELECT_PRODUCT);
@@ -248,7 +250,20 @@ public class TicketFun {
                 System.out.println("Se ha ejecutado");
 
         return productList;
-        }}
+        }
+    public static void showProfit(ArrayList<Ticket> ticketList) {
+        float profit = 0;
+        for (Ticket ticket : ticketList) {
+            profit = profit + ticket.getPrice();
+        }
+
+        System.out.println("The Profit is "+profit);
+    }
+    public static void displayPurchases(ArrayList<Ticket> ticketList) {
+        for (Ticket ticket : ticketList) {
+           System.out.println( ticket.toString());
+    }
+}}
 
 
 

@@ -15,7 +15,7 @@ public class Menu {
 
         FlowerShop flowerShop = FlowerShop.connectFlowerShop();
         DataBase db = flowerShop.getDb();
-
+        Ticket ticket =new Ticket();
         int option = 0;
         System.out.println("Welcome to " + flowerShop.getName() + " Flower Shop! Please choose an option:");
 
@@ -44,21 +44,21 @@ public class Menu {
                     //calculateTotalValue();
                     break;
                 case 7:
-                    //generateTicket();
+                    ticket= TicketFun.generateTicket(db);
                     break;
                 case 8:
                     //showTicket();
                 case 9:
-                    //displayPurchases();
+                    TicketFun.displayPurchases(TicketFun.getTickets(db));
                     break;
                 case 10:
-                    //showProfit();
+                    TicketFun.showProfit(TicketFun.getTickets(db));
                     break;
                 case 11:
-                    //generateJSON(serializar ultimo ticket/Sc del nombre para el archivo);
+                    generateJSON(ticket,"ticket");
                     break;
                 case 12:
-                    //readJSON(Sc nombre del ticket);
+                    readJSON("ticket");
                     break;
                 default:
                     System.out.println("Please choose one of the options.");
