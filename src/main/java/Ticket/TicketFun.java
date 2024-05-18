@@ -37,7 +37,7 @@ public class TicketFun {
                     actualTicket=removeProductTicket(actualTicket);
                     break;
                 case 3:
-                    actualTicket.toString();
+                    System.out.println(actualTicket.toString());
                     break;
                 case 4:
                     createTicket(actualTicket,db);
@@ -86,7 +86,7 @@ public class TicketFun {
     public static Ticket addProductTicket(Ticket actualTicket, DataBase db) {
         //Show Stock
         int idProdnew = validateInt("Which is the ID of the product you want to add?");
-        boolean ok = false;
+        boolean ok= false;
 
 
         for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
@@ -95,17 +95,22 @@ public class TicketFun {
             int value = entry.getValue();
             if (idProdnew == prodId) {
 
-                System.out.println("The product ID " + idProdnew + " already exists in the ticket. ");
-                int quantitytoadd = validateInt("How many additional units of the product do you want to add?");
+                System.out.println("The product ID " + idProdnew + " already exists in the ticket. \n");
+                int quantitytoadd = validateInt("How many additional units of the product do you want to add?\n");
                 actualTicket.getProductList().replace(product, (quantitytoadd + value));//si no provar con .put
+
                 ok = true;
 
             }
         }
         if (ok == false) {
-            actualTicket.getProductList().put(prodCreator(idProdnew, db), validateInt("How many units of the product do you want to add?"));
-        }
 
+            Product product =prodCreator(idProdnew, db);
+            if (product!=null){
+            actualTicket.getProductList().put(product, validateInt("\nHow many units of the product do you want to add?\n"));}
+
+        }
+        actualTicket.calculateTotalPrice();
 
         //falta restar al stock
 
@@ -156,21 +161,23 @@ public class TicketFun {
         }
 
 
-        System.out.println("Se ha ejecutado");
+        System.out.println("ID incorrect");
         return null;
     }
 
     public static Ticket removeProductTicket(Ticket actualTicket) {
         System.out.println(actualTicket.toString());
         boolean ok = false;
-        int iRemove = validateInt("Which is the Index of the product you want to remove?");
-        for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
+        int iRemove = validateInt("Which is the ID of the product you want to add?");
+        for (HashMap.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
             int prodId = entry.getKey().getId();
             Product product = entry.getKey();
 
             if (iRemove == prodId) {
                 actualTicket.getProductList().remove(product);
                 //add a stock
+                ok=true;
+                System.out.println("Producto eliminado ");
             }
         }
         if (ok == false) {
