@@ -1,24 +1,26 @@
 package Ticket;
 
 import Connection.MySQL.QueriesMySQL;
+
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
 import Product.*;
 import Connection.*;
+
 import static Validation.Validation.validateInt;
 import static Validation.Validation.validateStock;
 
 public class TicketFunc {
-    public static Ticket generateTicket(DataBase db){
-        Ticket actualTicket=new Ticket();
+    public static Ticket generateTicket(DataBase db) {
+        Ticket actualTicket = new Ticket();
         System.out.println("Generating Ticket...");//
         int option = 0;
-        Boolean ok=false;
+        Boolean ok = false;
         do {
             option = validateInt("""
-           
+                               
                     1. Add product ticket. \s
                     2. Remove product.\s
                     3. Show actual ticket\s
@@ -26,22 +28,22 @@ public class TicketFunc {
 
             switch (option) {
                 case 1:
-                    actualTicket=addProductTicket(actualTicket,db);
+                    actualTicket = addProductTicket(actualTicket, db);
                     break;
                 case 2:
-                    actualTicket=removeProductTicket(actualTicket,db);
+                    actualTicket = removeProductTicket(actualTicket, db);
                     break;
                 case 3:
                     System.out.println(actualTicket);
                     break;
                 case 4:
-                    createTicket(actualTicket,db);
-                    ok=true;
+                    createTicket(actualTicket, db);
+                    ok = true;
                     break;
 
             }
         } while (!ok);
-    return actualTicket;
+        return actualTicket;
 
     }
 
@@ -57,7 +59,7 @@ public class TicketFunc {
 
             ResultSet rs = stmt.getGeneratedKeys();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 int ticketId = rs.getInt(1);
                 ticket.setTicketId(ticketId);
 
@@ -79,6 +81,7 @@ public class TicketFunc {
             System.err.printf(e.getMessage());
         }
     }
+
     public static void addStockTicket(DataBase db, int productId, int quantity) {
         int productID = productId;
         int quantityToAdd = quantity;
@@ -103,11 +106,12 @@ public class TicketFunc {
             System.err.println("Error updating the product stock.\n" + e);
         }
     }
+
     public static Ticket addProductTicket(Ticket actualTicket, DataBase db) {
         db.showStock(db);
         int idProdnew = validateInt("Which is the ID of the product you want to add?");
-        boolean ok= false;
-        int quantitytoadd=0;
+        boolean ok = false;
+        int quantitytoadd = 0;
 
         for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
             int prodId = entry.getKey().getId();
@@ -120,19 +124,20 @@ public class TicketFunc {
                 actualTicket.getProductList().replace(product, (quantitytoadd + value));
 
                 ok = true;
-                TicketFunc.removeStockTicket(db,idProdnew,quantitytoadd);
+                TicketFunc.removeStockTicket(db, idProdnew, quantitytoadd);
             }
         }
         if (ok == false) {
 
-            Product product =prodCreator(idProdnew, db);
-            if (product!=null){
-                quantitytoadd= validateInt("\nHow many units of the product do you want to add?\n");
-                 if(TicketFunc.removeStockTicket(db,idProdnew,quantitytoadd))
-                        {actualTicket.getProductList().put(product,quantitytoadd);}
+            Product product = prodCreator(idProdnew, db);
+            if (product != null) {
+                quantitytoadd = validateInt("\nHow many units of the product do you want to add?\n");
+                if (TicketFunc.removeStockTicket(db, idProdnew, quantitytoadd)) {
+                    actualTicket.getProductList().put(product, quantitytoadd);
+                }
 
-        }
-        actualTicket.calculateTotalPrice();
+            }
+            actualTicket.calculateTotalPrice();
 
         }
         return actualTicket;
@@ -141,7 +146,7 @@ public class TicketFunc {
     public static Product prodCreator(int idProd, DataBase db) {
 
 
-        try (Connection con = db.connect();){
+        try (Connection con = db.connect();) {
 
             PreparedStatement stmt = con.prepareStatement(
                     QueriesMySQL.SELECT_PRODUCT);
@@ -178,19 +183,19 @@ public class TicketFunc {
         return null;
     }
 
-    public static Ticket removeProductTicket(Ticket actualTicket,DataBase db) {
+    public static Ticket removeProductTicket(Ticket actualTicket, DataBase db) {
         System.out.println(actualTicket.toString());
         boolean ok = false;
         int iRemove = validateInt("Which is the ID of the product you want to add?");
         for (HashMap.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
             int prodId = entry.getKey().getId();
             Product product = entry.getKey();
-            int quantity= entry.getValue();
+            int quantity = entry.getValue();
 
             if (iRemove == prodId) {
                 actualTicket.getProductList().remove(product);
-                TicketFunc.addStockTicket(db,prodId,quantity);
-                ok=true;
+                TicketFunc.addStockTicket(db, prodId, quantity);
+                ok = true;
                 System.out.println("Product deleted ");
             }
         }
@@ -201,7 +206,8 @@ public class TicketFunc {
         actualTicket.calculateTotalPrice();
         return actualTicket;
     }
-    public static ArrayList<Ticket> getTickets(DataBase db)  {
+
+    public static ArrayList<Ticket> getTickets(DataBase db) {
         ArrayList<Ticket> ticketList = new ArrayList<>();
         try (Connection con = db.connect()) {
             PreparedStatement statement = con.prepareStatement(QueriesMySQL.SELECT_TICKETS);
@@ -224,7 +230,6 @@ public class TicketFunc {
             System.err.println("Error updating the product stock.\n" + e);
         }
         return ticketList;
-
 
 
     }
@@ -256,62 +261,67 @@ public class TicketFunc {
         } catch (SQLException e) {
             System.err.println("Error updating the product stock.\n" + e);
         }
-        return false ;
+        return false;
     }
+
     public static HashMap<Product, Integer> getProductsListFromTicketiD(int ticketId, DataBase db) throws SQLException {
         HashMap<Product, Integer> productList = new HashMap<>();
         try (Connection con = db.connect()) {
             PreparedStatement stmt = con.prepareStatement(QueriesMySQL.SELECT_PRODUCT_TICKET);
 
-                stmt.setInt(1, ticketId);
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    int idProd = rs.getInt("id_product");
-                    String type = rs.getString("type");
-                    int price = rs.getInt("price");
-                    String attribute = rs.getString("attribute");
-                    int quantity=rs.getInt("quantity");
-                    switch (type) {
-                        case "TREE":
+            stmt.setInt(1, ticketId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int idProd = rs.getInt("id_product");
+                String type = rs.getString("type");
+                int price = rs.getInt("price");
+                String attribute = rs.getString("attribute");
+                int quantity = rs.getInt("quantity");
+                switch (type) {
+                    case "TREE":
 
-                            Tree tree = new Tree(price, Integer.parseInt(attribute), idProd);
-                            productList.put(tree, quantity);
-                            break;
+                        Tree tree = new Tree(price, Integer.parseInt(attribute), idProd);
+                        productList.put(tree, quantity);
+                        break;
 
-                        case "FLOWER":
-                            Flower flower = new Flower(price, attribute, idProd);
-                            productList.put(flower, quantity);
-                            break;
+                    case "FLOWER":
+                        Flower flower = new Flower(price, attribute, idProd);
+                        productList.put(flower, quantity);
+                        break;
 
-                        case "DECORATION":
-                            Product.Decoration.Material material = Decoration.Material.valueOf(attribute.toUpperCase());
-                            Decoration decoration = new Decoration(price, material, idProd);
-                            productList.put(decoration, quantity);
-                            break;
-                    }
+                    case "DECORATION":
+                        Product.Decoration.Material material = Decoration.Material.valueOf(attribute.toUpperCase());
+                        Decoration decoration = new Decoration(price, material, idProd);
+                        productList.put(decoration, quantity);
+                        break;
+                }
 
-
-                }}catch(SQLException e){
-                System.err.printf(e.getMessage());
 
             }
+        } catch (SQLException e) {
+            System.err.printf(e.getMessage());
+
+        }
 
 
         return productList;
-        }
+    }
+
     public static void showProfit(ArrayList<Ticket> ticketList) {
         float profit = 0;
         for (Ticket ticket : ticketList) {
             profit = profit + ticket.getPrice();
         }
 
-        System.out.println("The Profit is "+profit);
+        System.out.println("The Profit is " + profit);
     }
+
     public static void displayPurchases(ArrayList<Ticket> ticketList) {
         for (Ticket ticket : ticketList) {
-           System.out.println( ticket.toString());
+            System.out.println(ticket.toString());
+        }
     }
-}}
+}
 
 
 

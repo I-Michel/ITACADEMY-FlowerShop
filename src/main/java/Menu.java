@@ -1,6 +1,7 @@
 import Connection.*;
 import FlowerShop.FlowerShop;
 import Ticket.*;
+
 import static Validation.Validation.*;
 
 public class Menu {
@@ -55,7 +56,7 @@ public class Menu {
                     TicketFunc.showProfit(TicketFunc.getTickets(db));
                     break;
                 case 10:
-                    FlowerShop.generateJSON(ticket,"ticket");
+                    FlowerShop.generateJSON(ticket, "ticket");
                     break;
                 case 11:
                     FlowerShop.readJSON("ticket");
