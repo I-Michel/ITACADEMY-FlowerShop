@@ -1,10 +1,5 @@
 import Connection.*;
-import Connection.MySQL.*;
-import Connection.MongoDB.*;
 import FlowerShop.FlowerShop;
-import Product.*;
-import java.io.*;
-import java.sql.*;
 
 import Ticket.*;
 
@@ -50,23 +45,23 @@ public class Menu {
                     db.calculateTotalValue(db);
                     break;
                 case 6:
-                    ticket= TicketFun.generateTicket(db);
+                    ticket= TicketFunc.generateTicket(db);
 
                     break;
                 case 7:
-                    TicketFun.displayPurchases(TicketFun.getTickets(db));
+                    TicketFunc.displayPurchases(TicketFunc.getTickets(db));
                     break;
                 case 8:
-                    TicketFun.displayPurchases(TicketFun.getTickets(db));
+                    TicketFunc.displayPurchases(TicketFunc.getTickets(db));
                     break;
                 case 9:
-                    TicketFun.showProfit(TicketFun.getTickets(db));
+                    TicketFunc.showProfit(TicketFunc.getTickets(db));
                     break;
                 case 10:
-                    generateJSON(ticket,"ticket");
+                    FlowerShop.generateJSON(ticket,"ticket");
                     break;
                 case 11:
-                    readJSON("ticket");
+                    FlowerShop.readJSON("ticket");
                     break;
 
                 default:
@@ -75,27 +70,4 @@ public class Menu {
         } while (option != 11);
     }
 
-    public static void generateJSON(Ticket ticket, String name) {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
-            ObjectOutputStream objectOutPutStream = new ObjectOutputStream(fileOutputStream);
-            objectOutPutStream.writeObject(ticket);
-
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static void readJSON(String name) {
-
-        try {
-            FileInputStream Archivo = new FileInputStream(name + ".ser");
-            ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
-            Ticket ticket = (Ticket) objectInputStream.readObject();
-
-            System.out.println(ticket);
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }

@@ -3,6 +3,9 @@ package FlowerShop;
 import Connection.DataBase;
 import Connection.MongoDB.MongoDB;
 import Connection.MySQL.MySQLDB;
+import Ticket.Ticket;
+
+import java.io.*;
 
 import static Validation.Validation.validateInt;
 
@@ -97,6 +100,29 @@ public class FlowerShop {
             db.emptyProductStock(db, productID);
         } else {
             db.removeStock(db, productID);
+        }
+    }
+    public static void generateJSON(Ticket ticket, String name) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
+            ObjectOutputStream objectOutPutStream = new ObjectOutputStream(fileOutputStream);
+            objectOutPutStream.writeObject(ticket);
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void readJSON(String name) {
+
+        try {
+            FileInputStream Archivo = new FileInputStream(name + ".ser");
+            ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
+            Ticket ticket = (Ticket) objectInputStream.readObject();
+
+            System.out.println(ticket);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

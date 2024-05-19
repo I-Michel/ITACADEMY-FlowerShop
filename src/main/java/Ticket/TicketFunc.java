@@ -18,7 +18,7 @@ import Connection.*;
 import static Validation.Validation.validateInt;
 import static Validation.Validation.validateStock;
 
-public class TicketFun {
+public class TicketFunc {
 //
     public static Ticket generateTicket(DataBase db){
         Ticket actualTicket=new Ticket();
@@ -26,8 +26,12 @@ public class TicketFun {
         int option = 0;
         Boolean ok=false;
         do {
-            option = validateInt(" \n1. Add product ticket.  \n2. Remove product. \n" +
-                    "3. Show actual ticket \n4. Finish Ticket ");
+            option = validateInt("""
+           
+                    1. Add product ticket. \s
+                    2. Remove product.\s
+                    3. Show actual ticket\s
+                    4. Finish Ticket\s""");
 
             switch (option) {
                 case 1:
@@ -37,7 +41,7 @@ public class TicketFun {
                     actualTicket=removeProductTicket(actualTicket,db);
                     break;
                 case 3:
-                    System.out.println(actualTicket.toString());
+                    System.out.println(actualTicket);
                     break;
                 case 4:
                     createTicket(actualTicket,db);
@@ -125,7 +129,7 @@ public class TicketFun {
                 actualTicket.getProductList().replace(product, (quantitytoadd + value));
 
                 ok = true;
-                TicketFun.removeStockTicket(db,idProdnew,quantitytoadd);
+                TicketFunc.removeStockTicket(db,idProdnew,quantitytoadd);
             }
         }
         if (ok == false) {
@@ -133,7 +137,7 @@ public class TicketFun {
             Product product =prodCreator(idProdnew, db);
             if (product!=null){
                 quantitytoadd= validateInt("\nHow many units of the product do you want to add?\n");
-                 if(TicketFun.removeStockTicket(db,idProdnew,quantitytoadd))
+                 if(TicketFunc.removeStockTicket(db,idProdnew,quantitytoadd))
                         {actualTicket.getProductList().put(product,quantitytoadd);}
 
         }
@@ -199,7 +203,7 @@ public class TicketFun {
 
             if (iRemove == prodId) {
                 actualTicket.getProductList().remove(product);
-                TicketFun.addStockTicket(db,prodId,quantity);
+                TicketFunc.addStockTicket(db,prodId,quantity);
                 ok=true;
                 System.out.println("Product deleted ");
             }
