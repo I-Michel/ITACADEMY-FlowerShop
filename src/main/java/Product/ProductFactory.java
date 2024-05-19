@@ -1,6 +1,6 @@
 package Product;
-import  Product.Decoration.Material;
 
+import  Product.Decoration.Material;
 import static Validation.Validation.*;
 
 public class ProductFactory {
@@ -25,7 +25,7 @@ public class ProductFactory {
 
         do {
             numMaterial = validateInt("Which is the material of the new decoration? Please choose an option:" +
-                    "\n1. Wood.\n 2. Plastic");
+                    "\n1. Wood.\n2. Plastic");
             if (numMaterial == 1) {
                 material = Material.WOOD;
             } else if (numMaterial == 2) {
