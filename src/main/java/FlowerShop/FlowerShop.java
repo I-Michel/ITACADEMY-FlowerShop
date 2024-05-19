@@ -102,9 +102,9 @@ public class FlowerShop {
             db.removeStock(db, productID);
         }
     }
-    public static void generateJSON(Ticket ticket, String name) {
+    public static void generateJSON(Ticket ticket) {
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(name + ".ser");
+            FileOutputStream fileOutputStream = new FileOutputStream("archivo.ser");
             ObjectOutputStream objectOutPutStream = new ObjectOutputStream(fileOutputStream);
             objectOutPutStream.writeObject(ticket);
 
@@ -113,11 +113,11 @@ public class FlowerShop {
         }
     }
 
-    public static void readJSON(String name) {
+    public static void readJSON() {
 
         try {
-            FileInputStream Archivo = new FileInputStream(name + ".ser");
-            ObjectInputStream objectInputStream = new ObjectInputStream(Archivo);
+            FileInputStream archivo = new FileInputStream( "archivo.ser");
+            ObjectInputStream objectInputStream = new ObjectInputStream(archivo);
             Ticket ticket = (Ticket) objectInputStream.readObject();
 
             System.out.println(ticket);

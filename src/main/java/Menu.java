@@ -53,10 +53,10 @@ public class Menu {
                     TicketFunc.showProfit(TicketFunc.getTickets(db));
                     break;
                 case 9:
-                    FlowerShop.generateJSON(ticket, "ticket");
+                    FlowerShop.generateJSON(ticket);
                     break;
                 case 10:
-                    FlowerShop.readJSON("ticket");
+                    FlowerShop.readJSON();
                     break;
                 default:
                     System.out.println("Please choose one of the options.");
