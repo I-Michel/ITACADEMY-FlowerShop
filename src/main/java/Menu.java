@@ -21,7 +21,6 @@ public class Menu {
 
         do {
             option = validateInt("""
-                    0. Close app.\s
                     1. Add product.\s
                     2. Remove product.\s
                     3. Show stock details.\s
@@ -32,7 +31,8 @@ public class Menu {
                     8. Display purchases.\s
                     9. Show total profit.\s
                     10. Generate JSON from ticket.\s
-                    11. Read ticket from JSON.""");
+                    11. Read ticket from JSON.\s
+                    12. Close app.""");
 
             switch (option) {
                 case 1:
@@ -70,7 +70,7 @@ public class Menu {
                 default:
                     System.out.println("Please choose one of the options.");
             }
-        } while (option != 0);
+        } while (option != 12);
     }
 
     public static void addOptions(DataBase db) {
@@ -321,22 +321,22 @@ public class Menu {
                 }
 
                 PreparedStatement stmt2 = con.prepareStatement(sql);
-                stmt.setInt(1, productID);
-                ResultSet rs2 = stmt2.executeQuery();
+                stmt2.setInt(1, productID);
+                ResultSet rs2 = stmt2.executeQuery(); // cambiar nombre rs
 
                 switch (type) {
                     case "FLOWER":
-                        String color = rs.getString("color");
+                        String color = rs2.getString("color");
                         product = new Flower(price, color, productID);
                         break;
                     case "TREE":
                         sql = "SELECT height FROM tree WHERE product_id = ?";
-                        float height = rs.getFloat("height");
+                        float height = rs2.getFloat("height");
                         product = new Tree(price, height, productID);
                         break;
                     case "DECORATION":
                         sql = "SELECT material FROM decoration WHERE product_id = ?";
-                        Decoration.Material material = Decoration.Material.valueOf(rs.getString("material"));
+                        Decoration.Material material = Decoration.Material.valueOf(rs2.getString("material"));
                         product = new Decoration(price, material, productID);
                         break;
                 }
