@@ -1,8 +1,6 @@
 import Connection.*;
 import FlowerShop.FlowerShop;
-
 import Ticket.*;
-
 import static Validation.Validation.*;
 
 public class Menu {
@@ -46,7 +44,6 @@ public class Menu {
                     break;
                 case 6:
                     ticket= TicketFunc.generateTicket(db);
-
                     break;
                 case 7:
                     TicketFunc.displayPurchases(TicketFunc.getTickets(db));
@@ -63,11 +60,9 @@ public class Menu {
                 case 11:
                     FlowerShop.readJSON("ticket");
                     break;
-
                 default:
                     System.out.println("Please choose one of the options.");
             }
         } while (option != 11);
     }
-
 }
