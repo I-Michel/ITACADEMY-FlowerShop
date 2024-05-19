@@ -50,15 +50,12 @@ public class Menu {
                     TicketFunc.displayPurchases(TicketFunc.getTickets(db));
                     break;
                 case 8:
-                    TicketFunc.displayPurchases(TicketFunc.getTickets(db));
-                    break;
-                case 9:
                     TicketFunc.showProfit(TicketFunc.getTickets(db));
                     break;
-                case 10:
+                case 9:
                     FlowerShop.generateJSON(ticket, "ticket");
                     break;
-                case 11:
+                case 10:
                     FlowerShop.readJSON("ticket");
                     break;
                 default:

@@ -5,10 +5,9 @@ import Connection.MySQL.QueriesMySQL;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
-
+import Product.Decoration.Material;
 import Product.*;
 import Connection.*;
-
 import static Validation.Validation.validateInt;
 import static Validation.Validation.validateStock;
 
@@ -167,11 +166,10 @@ public class TicketFunc {
                         return new Flower(price, attribute, idProd);
 
                     case "DECORATION":
-                        Product.Decoration.Material material = Decoration.Material.valueOf(attribute.toUpperCase());
+                        Material material = Material.valueOf(attribute.toUpperCase());
                         return new Decoration(price, material, idProd);
 
                 }
-
 
             }
         } catch (SQLException e) {
@@ -186,7 +184,7 @@ public class TicketFunc {
     public static Ticket removeProductTicket(Ticket actualTicket, DataBase db) {
         System.out.println(actualTicket.toString());
         boolean ok = false;
-        int iRemove = validateInt("Which is the ID of the product you want to add?");
+        int iRemove = validateInt("Which is the ID of the product you want to remove?");
         for (HashMap.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
             int prodId = entry.getKey().getId();
             Product product = entry.getKey();
@@ -290,7 +288,7 @@ public class TicketFunc {
                         break;
 
                     case "DECORATION":
-                        Product.Decoration.Material material = Decoration.Material.valueOf(attribute.toUpperCase());
+                        Material material = Material.valueOf(attribute.toUpperCase());
                         Decoration decoration = new Decoration(price, material, idProd);
                         productList.put(decoration, quantity);
                         break;
@@ -313,7 +311,7 @@ public class TicketFunc {
             profit = profit + ticket.getPrice();
         }
 
-        System.out.println("The Profit is " + profit);
+        System.out.println("The Profit is " + profit + " €.");
     }
 
     public static void displayPurchases(ArrayList<Ticket> ticketList) {
