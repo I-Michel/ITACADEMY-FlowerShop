@@ -201,7 +201,7 @@ public class TicketFun {
                 actualTicket.getProductList().remove(product);
                 TicketFun.addStockTicket(db,prodId,quantity);
                 ok=true;
-                System.out.println("Producto eliminado ");
+                System.out.println("Product deleted ");
             }
         }
         if (ok == false) {
@@ -303,7 +303,6 @@ public class TicketFun {
 
 
                 }}catch(SQLException e){
-                System.err.println("Falta escribir mensaje error");
                 System.err.printf(e.getMessage());
                 e.printStackTrace();
             }
