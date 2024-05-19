@@ -1,25 +1,16 @@
 package Ticket;
 
 import Connection.MySQL.QueriesMySQL;
-import Product.Product;
 import java.sql.*;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import Product.Tree;
-import Product.Flower;
-import Product.Decoration;
-import Product.Decoration.Material;
-import Connection.*;
+import java.util.*;
+import java.util.Date;
 
+import Product.*;
+import Connection.*;
 import static Validation.Validation.validateInt;
 import static Validation.Validation.validateStock;
 
 public class TicketFunc {
-//
     public static Ticket generateTicket(DataBase db){
         Ticket actualTicket=new Ticket();
         System.out.println("Generating Ticket...");//
@@ -165,26 +156,21 @@ public class TicketFunc {
                 String attribute = rs.getString("attribute");
                 switch (type) {
                     case "TREE":
-
-                        Tree tree = new Tree(price, Integer.parseInt(attribute), idProd);
-                        System.out.print(tree);
-                        return tree;
+                        return new Tree(price, Integer.parseInt(attribute), idProd);
 
                     case "FLOWER":
-                        Flower flower = new Flower(price, attribute, idProd);
-                        return flower;
+                        return new Flower(price, attribute, idProd);
 
                     case "DECORATION":
-                        Material material = Material.valueOf(attribute.toUpperCase());
-                        Decoration decoration = new Decoration(price, material, idProd);
-                        return decoration;
+                        Product.Decoration.Material material = Decoration.Material.valueOf(attribute.toUpperCase());
+                        return new Decoration(price, material, idProd);
+
                 }
 
 
             }
         } catch (SQLException e) {
             System.err.printf(e.getMessage());
-            e.printStackTrace();
         }
 
 
@@ -208,20 +194,19 @@ public class TicketFunc {
                 System.out.println("Product deleted ");
             }
         }
-        if (ok == false) {
+        if (!ok) {
             System.out.println("ID not found ");
-        }//traducir
+        }
 
         actualTicket.calculateTotalPrice();
         return actualTicket;
     }
     public static ArrayList<Ticket> getTickets(DataBase db)  {
         ArrayList<Ticket> ticketList = new ArrayList<>();
-        try {
-            Connection con = db.connect();
+        try (Connection con = db.connect()) {
             PreparedStatement statement = con.prepareStatement(QueriesMySQL.SELECT_TICKETS);
             ResultSet rs = statement.executeQuery();
-            boolean sig=false;
+
 
             while (rs.next()) {
                 int ticketId = rs.getInt("id_ticket");
@@ -231,12 +216,12 @@ public class TicketFunc {
                 HashMap<Product, Integer> productList = getProductsListFromTicketiD(ticketId, db);
                 Ticket ticketActual = new Ticket(ticketId, date, productList, tPrice);
                 ticketList.add(ticketActual);
-                sig=true;
+
             }
 
 
         } catch (SQLException e) {
-            e.printStackTrace(System.out);
+            System.err.println("Error updating the product stock.\n" + e);
         }
         return ticketList;
 
@@ -244,8 +229,8 @@ public class TicketFunc {
 
     }
 
-    public static boolean removeStockTicket(DataBase db, int productID, int quantity) {
-        int quantityToRemove = quantity;
+    public static boolean removeStockTicket(DataBase db, int productID, int quantityToRemove) {
+
 
         try (Connection con = db.connect()) {
             PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
@@ -299,7 +284,7 @@ public class TicketFunc {
                             break;
 
                         case "DECORATION":
-                            Material material = Material.valueOf(attribute.toUpperCase());
+                            Product.Decoration.Material material = Decoration.Material.valueOf(attribute.toUpperCase());
                             Decoration decoration = new Decoration(price, material, idProd);
                             productList.put(decoration, quantity);
                             break;
@@ -308,7 +293,7 @@ public class TicketFunc {
 
                 }}catch(SQLException e){
                 System.err.printf(e.getMessage());
-                e.printStackTrace();
+
             }
 
 
