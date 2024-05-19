@@ -16,7 +16,6 @@ public class Menu {
 
         do {
             option = validateInt("""
-                    0. Close app.\s
                     1. Add product.\s
                     2. Remove product.\s
                     3. Show stock details.\s
@@ -27,7 +26,8 @@ public class Menu {
                     8. Display purchases.\s
                     9. Show total profit.\s
                     10. Generate JSON from ticket.\s
-                    11. Read ticket from JSON.""");
+                    11. Read ticket from JSON.\s
+                    12. Close app.""");
 
             switch (option) {
                 case 1:
@@ -65,7 +65,7 @@ public class Menu {
                 default:
                     System.out.println("Please choose one of the options.");
             }
-        } while (option != 0);
+        } while (option != 12);
     }
 
     public static void generateJSON(Ticket ticket, String name) {
