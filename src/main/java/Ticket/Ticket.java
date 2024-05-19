@@ -1,17 +1,11 @@
 package Ticket;
-
 import Product.Product;
-
 import java.sql.Timestamp;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static Validation.Validation.validateInt;
 
-//Serializar
 public class Ticket {
     private int ticketId;
     private Date date;

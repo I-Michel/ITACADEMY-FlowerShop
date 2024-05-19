@@ -1,7 +1,6 @@
 package Ticket;
-import Connection.MySQL.MySQLDB;
+
 import Connection.MySQL.QueriesMySQL;
-import FlowerShop.FlowerShop;
 import Product.Product;
 import java.sql.*;
 import java.sql.PreparedStatement;
@@ -52,8 +51,8 @@ public class TicketFun {
     }
 
     public static void createTicket(Ticket ticket, DataBase db) {
-        Connection con = db.connect();
-        try  {
+
+        try (Connection con = db.connect();) {
 
             PreparedStatement stmt = con.prepareStatement(QueriesMySQL.INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
 
@@ -82,7 +81,6 @@ public class TicketFun {
             }
 
         } catch (SQLException e) {
-            System.err.println("Falta escribir mensaje error");
             System.err.printf(e.getMessage());
         }
     }
@@ -124,7 +122,7 @@ public class TicketFun {
 
                 System.out.println("The product ID " + idProdnew + " already exists in the ticket. \n");
                 quantitytoadd = validateInt("How many additional units of the product do you want to add?\n");
-                actualTicket.getProductList().replace(product, (quantitytoadd + value));//si no provar con .put
+                actualTicket.getProductList().replace(product, (quantitytoadd + value));
 
                 ok = true;
                 TicketFun.removeStockTicket(db,idProdnew,quantitytoadd);
@@ -148,8 +146,8 @@ public class TicketFun {
     public static Product prodCreator(int idProd, DataBase db) {
 
 
-        try {
-            Connection con = db.connect();
+        try (Connection con = db.connect();){
+
             PreparedStatement stmt = con.prepareStatement(
                     QueriesMySQL.SELECT_PRODUCT);
 
@@ -181,7 +179,6 @@ public class TicketFun {
 
             }
         } catch (SQLException e) {
-            System.err.println("Falta escribir mensaje error");
             System.err.printf(e.getMessage());
             e.printStackTrace();
         }
