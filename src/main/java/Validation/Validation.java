@@ -1,15 +1,20 @@
 package Validation;
 
-import Product.Product;
-import Exception.EmptyStockException;
-
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class Validation {
 
-    public static void validateStock(HashMap <Product, Integer> productStock, Product key ) throws EmptyStockException {
+    public static boolean validateStock(int actualStock, int updateStock, String option) {
+        boolean result = false;
 
+        if (actualStock == 0) {
+            System.out.println("Cannot " + option + " this product because actual stock is 0.");
+        } else if (updateStock > actualStock) {
+            System.out.println("Cannot " + option + updateStock + " items because actual stock is " + actualStock + " items.");
+        } else {
+            result = true;
+        }
+        return result;
     }
 
     public static int validateInt(String message) {

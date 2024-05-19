@@ -1,10 +1,8 @@
 package Connection.MongoDB;
 
 import Connection.DataBase;
-
-import javax.xml.crypto.Data;
+import Product.Product;
 import java.sql.Connection;
-import java.sql.DriverManager;
 
 public class MongoDB implements DataBase {
 
@@ -25,22 +23,43 @@ public class MongoDB implements DataBase {
         return null;
     }
 
-    /*@Override
-    public void disconnect(Connection con) {
+    @Override
+    public void addStock(DataBase db) {
 
-    } */
+    }
 
+    @Override
+    public void generateNewProduct(DataBase db) {
 
-    /* public static Connection connect() {
-        try {
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement stmt = con.createStatement();
-            stmt.executeQuery("USE flowershop");
-            return con;
-        } catch (SQLException e) {
-            System.err.println("Falta escribir mensaje error");
-            System.err.printf(e.getMessage());
-        }
-        return null;
-    } */
+    }
+
+    @Override
+    public void injectNewProduct(DataBase db, Product newProduct, String typeString, int quantity) {
+
+    }
+
+    @Override
+    public void removeStock(DataBase db, int productID) {
+
+    }
+
+    @Override
+    public void emptyProductStock(DataBase db, int productID) {
+
+    }
+
+    @Override
+    public void showStock(DataBase db) {
+
+    }
+
+    @Override
+    public void calculateStock(DataBase db) {
+
+    }
+
+    @Override
+    public void calculateTotalValue(DataBase db) {
+
+    }
 }
