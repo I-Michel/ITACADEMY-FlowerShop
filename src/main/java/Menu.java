@@ -8,7 +8,7 @@ public class Menu {
 
         FlowerShop flowerShop = FlowerShop.connectFlowerShop();
         DataBase db = flowerShop.getDb();
-        Ticket ticket =new Ticket();
+        Ticket ticket = new Ticket();
         int option = 0;
         System.out.println("Welcome to " + flowerShop.getName() + " Flower Shop! Please choose an option:");
 
@@ -43,7 +43,7 @@ public class Menu {
                     db.calculateTotalValue(db);
                     break;
                 case 6:
-                    ticket= TicketFunc.generateTicket(db);
+                    ticket = TicketFunc.generateTicket(db);
                     break;
                 case 7:
                     TicketFunc.displayPurchases(TicketFunc.getTickets(db));
