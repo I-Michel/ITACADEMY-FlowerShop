@@ -27,12 +27,11 @@ public class Menu {
                     4. Calculate total stock.\s
                     5. Calculate stock value.\s
                     6. Generate ticket.\s
-                    7. Show ticket.\s
-                    8. Display purchases.\s
-                    9. Show total profit.\s
-                    10. Generate JSON from ticket.\s
-                    11. Read ticket from JSON.\s
-                    12. Close app.""");
+                    7. Show tickets.\s
+                    8. Show total profit.\s
+                    9. Generate JSON from ticket.\s
+                    10. Read ticket from JSON.\s
+                    11. Close app.""");
 
             switch (option) {
                 case 1:
@@ -51,29 +50,29 @@ public class Menu {
                     db.calculateTotalValue(db);
                     break;
                 case 6:
-                    //generateTicket();
+                    ticket= TicketFun.generateTicket(db);
+
                     break;
                 case 7:
-                    ticket= TicketFun.generateTicket(db);
-                    break;
-                case 8:
-                    //showTicket();
-                case 9:
                     TicketFun.displayPurchases(TicketFun.getTickets(db));
                     break;
-                case 10:
+                case 8:
+                    TicketFun.displayPurchases(TicketFun.getTickets(db));
+                    break;
+                case 9:
                     TicketFun.showProfit(TicketFun.getTickets(db));
                     break;
-                case 11:
+                case 10:
                     generateJSON(ticket,"ticket");
                     break;
-                case 12:
+                case 11:
                     readJSON("ticket");
                     break;
+
                 default:
                     System.out.println("Please choose one of the options.");
             }
-        } while (option != 12);
+        } while (option != 11);
     }
 
     public static void generateJSON(Ticket ticket, String name) {

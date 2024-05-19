@@ -17,24 +17,25 @@ import Product.Decoration.Material;
 import Connection.*;
 
 import static Validation.Validation.validateInt;
+import static Validation.Validation.validateStock;
 
 public class TicketFun {
 //
     public static Ticket generateTicket(DataBase db){
         Ticket actualTicket=new Ticket();
-        System.out.println("Se ha generado un ticket que deseas hacer");//
+        System.out.println("Generating Ticket...");//
         int option = 0;
         Boolean ok=false;
         do {
             option = validateInt(" \n1. Add product ticket.  \n2. Remove product. \n" +
-                    "3. Show actual ticket \n4.Finish Ticket ");
+                    "3. Show actual ticket \n4. Finish Ticket ");
 
             switch (option) {
                 case 1:
                     actualTicket=addProductTicket(actualTicket,db);
                     break;
                 case 2:
-                    actualTicket=removeProductTicket(actualTicket);
+                    actualTicket=removeProductTicket(actualTicket,db);
                     break;
                 case 3:
                     System.out.println(actualTicket.toString());
@@ -85,12 +86,35 @@ public class TicketFun {
             System.err.printf(e.getMessage());
         }
     }
+    public static void addStockTicket(DataBase db, int productId, int quantity) {
+        int productID = productId;
+        int quantityToAdd = quantity;
 
+        try (Connection con = db.connect()) {
+            PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
+            stmt.setInt(1, productID);
+            ResultSet rs = stmt.executeQuery();
+
+            int actualQuantity = 0;
+            if (rs.next()) {
+                actualQuantity = rs.getInt("stock");
+            }
+            int newQuantity = actualQuantity + quantityToAdd;
+
+            stmt = con.prepareStatement("UPDATE product SET stock = ? WHERE id_product = ?");
+            stmt.setInt(1, newQuantity);
+            stmt.setInt(2, productID);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Error updating the product stock.\n" + e);
+        }
+    }
     public static Ticket addProductTicket(Ticket actualTicket, DataBase db) {
-        //Show Stock
+        db.showStock(db);
         int idProdnew = validateInt("Which is the ID of the product you want to add?");
         boolean ok= false;
-
+        int quantitytoadd=0;
 
         for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
             int prodId = entry.getKey().getId();
@@ -99,26 +123,25 @@ public class TicketFun {
             if (idProdnew == prodId) {
 
                 System.out.println("The product ID " + idProdnew + " already exists in the ticket. \n");
-                int quantitytoadd = validateInt("How many additional units of the product do you want to add?\n");
+                quantitytoadd = validateInt("How many additional units of the product do you want to add?\n");
                 actualTicket.getProductList().replace(product, (quantitytoadd + value));//si no provar con .put
 
                 ok = true;
-
+                TicketFun.removeStockTicket(db,idProdnew,quantitytoadd);
             }
         }
         if (ok == false) {
 
             Product product =prodCreator(idProdnew, db);
             if (product!=null){
-            actualTicket.getProductList().put(product, validateInt("\nHow many units of the product do you want to add?\n"));}
+                quantitytoadd= validateInt("\nHow many units of the product do you want to add?\n");
+                 if(TicketFun.removeStockTicket(db,idProdnew,quantitytoadd))
+                        {actualTicket.getProductList().put(product,quantitytoadd);}
 
         }
         actualTicket.calculateTotalPrice();
 
-        //falta restar al stock
-
-
-        //Modificar Stock
+        }
         return actualTicket;
     }
 
@@ -168,23 +191,24 @@ public class TicketFun {
         return null;
     }
 
-    public static Ticket removeProductTicket(Ticket actualTicket) {
+    public static Ticket removeProductTicket(Ticket actualTicket,DataBase db) {
         System.out.println(actualTicket.toString());
         boolean ok = false;
         int iRemove = validateInt("Which is the ID of the product you want to add?");
         for (HashMap.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
             int prodId = entry.getKey().getId();
             Product product = entry.getKey();
+            int quantity= entry.getValue();
 
             if (iRemove == prodId) {
                 actualTicket.getProductList().remove(product);
-                //add a stock
+                TicketFun.addStockTicket(db,prodId,quantity);
                 ok=true;
                 System.out.println("Producto eliminado ");
             }
         }
         if (ok == false) {
-            System.out.println("No corresponde con ningun núm del indice ");
+            System.out.println("ID not found ");
         }//traducir
 
         actualTicket.calculateTotalPrice();
@@ -219,6 +243,35 @@ public class TicketFun {
 
     }
 
+    public static boolean removeStockTicket(DataBase db, int productID, int quantity) {
+        int quantityToRemove = quantity;
+
+        try (Connection con = db.connect()) {
+            PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
+            stmt.setInt(1, productID);
+            ResultSet rs = stmt.executeQuery();
+
+            int actualQuantity = 0;
+            if (rs.next()) {
+                actualQuantity = rs.getInt("stock");
+            }
+
+            boolean ok = validateStock(actualQuantity, quantityToRemove, "add");
+
+            if (ok) {
+                int newQuantity = actualQuantity - quantityToRemove;
+
+                stmt = con.prepareStatement("UPDATE product SET stock = ? WHERE id_product = ?");
+                stmt.setInt(1, newQuantity);
+                stmt.setInt(2, productID);
+                stmt.executeUpdate();
+                return ok;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error updating the product stock.\n" + e);
+        }
+        return false ;
+    }
     public static HashMap<Product, Integer> getProductsListFromTicketiD(int ticketId, DataBase db) throws SQLException {
         HashMap<Product, Integer> productList = new HashMap<>();
         try (Connection con = db.connect()) {
@@ -258,8 +311,6 @@ public class TicketFun {
                 e.printStackTrace();
             }
 
-
-                System.out.println("Se ha ejecutado");
 
         return productList;
         }
