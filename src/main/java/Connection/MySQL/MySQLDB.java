@@ -168,7 +168,7 @@ public class MySQLDB implements DataBase {
                 actualQuantity = rs.getInt("stock");
             }
 
-            boolean ok = validateStock(actualQuantity, quantityToRemove);
+            boolean ok = validateStock(actualQuantity, quantityToRemove, "remove");
 
             if (ok) {
                 int newQuantity = actualQuantity - quantityToRemove;

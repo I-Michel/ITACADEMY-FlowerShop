@@ -1,22 +1,17 @@
 package Validation;
 
-import Product.Product;
-import Exception.EmptyStockException;
-import Exception.NotEnoughStockException;
-
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Validation {
 
-    public static boolean validateStock(int actualStock, int updateStock) {
+    public static boolean validateStock(int actualStock, int updateStock, String option) {
         boolean result = false;
 
         if (actualStock == 0) {
-            System.out.println("Cannot remove this product because actual stock is 0.");
+            System.out.println("Cannot " + option + " this product because actual stock is 0.");
         } else if (updateStock > actualStock) {
-            System.out.println("Cannot remove " + updateStock + " items because actual stock is " + actualStock + " items.");
+            System.out.println("Cannot " + option + updateStock + " items because actual stock is " + actualStock + " items.");
         } else {
             result = true;
         }
