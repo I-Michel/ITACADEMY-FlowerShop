@@ -1,7 +1,6 @@
 package Ticket;
 
 import Connection.MySQL.QueriesMySQL;
-
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -43,11 +42,9 @@ public class TicketFunc {
             }
         } while (!ok);
         return actualTicket;
-
     }
 
     public static void createTicket(Ticket ticket, DataBase db) {
-
         try (Connection con = db.connect();) {
 
             PreparedStatement stmt = con.prepareStatement(QueriesMySQL.INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
@@ -75,7 +72,6 @@ public class TicketFunc {
                     stmtprodt.executeUpdate();
                 }
             }
-
         } catch (SQLException e) {
             System.err.printf(e.getMessage());
         }
@@ -134,17 +130,13 @@ public class TicketFunc {
                 if (TicketFunc.removeStockTicket(db, idProdnew, quantitytoadd)) {
                     actualTicket.getProductList().put(product, quantitytoadd);
                 }
-
             }
             actualTicket.calculateTotalPrice();
-
         }
         return actualTicket;
     }
 
     public static Product prodCreator(int idProd, DataBase db) {
-
-
         try (Connection con = db.connect();) {
 
             PreparedStatement stmt = con.prepareStatement(
@@ -152,7 +144,6 @@ public class TicketFunc {
 
             stmt.setInt(1, idProd);
             ResultSet rs = stmt.executeQuery();
-
 
             if (rs.next()) {
                 String type = rs.getString("type");
@@ -168,14 +159,11 @@ public class TicketFunc {
                     case "DECORATION":
                         Material material = Material.valueOf(attribute.toUpperCase());
                         return new Decoration(price, material, idProd);
-
                 }
-
             }
         } catch (SQLException e) {
             System.err.printf(e.getMessage());
         }
-
 
         System.out.println("ID incorrect");
         return null;
@@ -200,7 +188,6 @@ public class TicketFunc {
         if (!ok) {
             System.out.println("ID not found ");
         }
-
         actualTicket.calculateTotalPrice();
         return actualTicket;
     }
@@ -210,7 +197,6 @@ public class TicketFunc {
         try (Connection con = db.connect()) {
             PreparedStatement statement = con.prepareStatement(QueriesMySQL.SELECT_TICKETS);
             ResultSet rs = statement.executeQuery();
-
 
             while (rs.next()) {
                 int ticketId = rs.getInt("id_ticket");
@@ -222,19 +208,13 @@ public class TicketFunc {
                 ticketList.add(ticketActual);
 
             }
-
-
         } catch (SQLException e) {
             System.err.println("Error updating the product stock.\n" + e);
         }
         return ticketList;
-
-
     }
 
     public static boolean removeStockTicket(DataBase db, int productID, int quantityToRemove) {
-
-
         try (Connection con = db.connect()) {
             PreparedStatement stmt = con.prepareStatement("SELECT stock FROM product WHERE id_product = ?");
             stmt.setInt(1, productID);
@@ -293,15 +273,11 @@ public class TicketFunc {
                         productList.put(decoration, quantity);
                         break;
                 }
-
-
             }
         } catch (SQLException e) {
             System.err.printf(e.getMessage());
 
         }
-
-
         return productList;
     }
 
@@ -310,7 +286,6 @@ public class TicketFunc {
         for (Ticket ticket : ticketList) {
             profit = profit + ticket.getPrice();
         }
-
         System.out.println("The Profit is " + profit + " €.");
     }
 
@@ -320,8 +295,3 @@ public class TicketFunc {
         }
     }
 }
-
-
-
-
-

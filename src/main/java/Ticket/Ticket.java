@@ -1,13 +1,11 @@
 package Ticket;
 
 import Product.Product;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class Ticket implements Serializable {
     private int ticketId;
@@ -38,7 +36,6 @@ public class Ticket implements Serializable {
         }
         return price;
     }
-
 
     public Date getDate() {
         return date;

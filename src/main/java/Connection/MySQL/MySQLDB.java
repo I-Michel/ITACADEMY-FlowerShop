@@ -198,7 +198,6 @@ public class MySQLDB implements DataBase {
 
     @Override
     public void showStock(DataBase db) {
-        // Pendiente ver si podemos optimizar, si da tiempo hacerlo en 3 queries sin el switch para que ordene las flores
         try (Connection con = db.connect()) {
 
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM product WHERE stock != 0;");

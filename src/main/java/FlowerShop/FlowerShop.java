@@ -4,9 +4,7 @@ import Connection.DataBase;
 import Connection.MongoDB.MongoDB;
 import Connection.MySQL.MySQLDB;
 import Ticket.Ticket;
-
 import java.io.*;
-
 import static Validation.Validation.validateInt;
 
 public class FlowerShop {
