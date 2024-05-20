@@ -5,9 +5,11 @@ import Connection.MySQL.QueriesMySQL;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
+
 import Product.Decoration.Material;
 import Product.*;
 import Connection.*;
+
 import static Validation.Validation.validateInt;
 import static Validation.Validation.validateStock;
 
@@ -77,7 +79,7 @@ public class TicketFunc {
             }
 
         } catch (SQLException e) {
-            System.err.printf(e.getMessage());
+            System.err.printf("Error creating ticket: " + e.getMessage());
         }
     }
 
@@ -112,11 +114,11 @@ public class TicketFunc {
         boolean ok = false;
         int quantitytoadd = 0;
 
-        for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
-            int prodId = entry.getKey().getId();
-            Product product = entry.getKey();
-            int value = entry.getValue();
-            if (idProdnew == prodId) {
+            for (Map.Entry<Product, Integer> entry : actualTicket.getProductList().entrySet()) {
+                int prodId = entry.getKey().getId();
+                Product product = entry.getKey();
+                int value = entry.getValue();
+                if (idProdnew == prodId) {
 
                 System.out.println("The product ID " + idProdnew + " already exists in the ticket. \n");
                 quantitytoadd = validateInt("How many additional units of the product do you want to add?\n");
@@ -126,7 +128,7 @@ public class TicketFunc {
                 TicketFunc.removeStockTicket(db, idProdnew, quantitytoadd);
             }
         }
-        if (ok == false) {
+        if (!ok) {
 
             Product product = prodCreator(idProdnew, db);
             if (product != null) {
@@ -136,6 +138,7 @@ public class TicketFunc {
                 }
 
             }
+
             actualTicket.calculateTotalPrice();
 
         }
@@ -173,7 +176,7 @@ public class TicketFunc {
 
             }
         } catch (SQLException e) {
-            System.err.printf(e.getMessage());
+            System.err.printf("Error creating product: " + e.getMessage());
         }
 
 
@@ -225,7 +228,7 @@ public class TicketFunc {
 
 
         } catch (SQLException e) {
-            System.err.println("Error updating the product stock.\n" + e);
+            System.err.println("Error retrieving tickets: " + e.getMessage());
         }
         return ticketList;
 
@@ -297,7 +300,7 @@ public class TicketFunc {
 
             }
         } catch (SQLException e) {
-            System.err.printf(e.getMessage());
+            System.err.printf("Error retrieving products from the ticket with ID: " + ticketId);
 
         }
 
