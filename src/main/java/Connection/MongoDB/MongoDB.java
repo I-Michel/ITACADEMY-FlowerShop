@@ -62,4 +62,9 @@ public class MongoDB implements DataBase {
     public void calculateTotalValue(DataBase db) {
 
     }
+
+    @Override
+    public boolean checkId(DataBase db, int id) {
+        return false;
+    }
 }

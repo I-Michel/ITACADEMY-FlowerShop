@@ -14,4 +14,5 @@ public interface DataBase {
     void showStock(DataBase db);
     void calculateStock(DataBase db);
     void calculateTotalValue(DataBase db);
+    boolean checkId(DataBase db, int id);
 }

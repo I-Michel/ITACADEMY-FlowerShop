@@ -168,7 +168,7 @@ public class TicketFunc {
             System.err.printf("Error creating product: " + e.getMessage());
         }
 
-        System.out.println("ID incorrect");
+        System.out.println("Incorrect ID.");
         return null;
     }
 

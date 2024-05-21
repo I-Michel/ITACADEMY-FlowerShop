@@ -4,7 +4,10 @@ import Connection.DataBase;
 import Connection.MongoDB.MongoDB;
 import Connection.MySQL.MySQLDB;
 import Ticket.Ticket;
+
 import java.io.*;
+
+import static Validation.Validation.validateId;
 import static Validation.Validation.validateInt;
 
 public class FlowerShop {
@@ -19,7 +22,7 @@ public class FlowerShop {
     }
 
     public static FlowerShop getInstance(DataBase db) {
-        if(instance == null){
+        if (instance == null) {
             instance = new FlowerShop(db);
         }
         return instance;
@@ -28,6 +31,7 @@ public class FlowerShop {
     public String getName() {
         return this.name;
     }
+
     public DataBase getDb() {
         return this.db;
     }
@@ -91,15 +95,22 @@ public class FlowerShop {
             }
         } while (option < 1 || option > 2);
 
-        int productID = validateInt("Which is the ID of the product you want to remove?");
-        // Falta revisar que el producto exista
+        int ok = 0;
+        int productID = 0;
+        do {
+            productID = validateInt("Which is the ID of the product you want to remove?");
+            ok = validateId(db, productID);
+        } while (ok == 2);
 
-        if (option == 1) {
-            db.emptyProductStock(db, productID);
-        } else {
-            db.removeStock(db, productID);
+        if (ok == 1) {
+            if (option == 1) {
+                db.emptyProductStock(db, productID);
+            } else {
+                db.removeStock(db, productID);
+            }
         }
     }
+
     public static void generateJSON(Ticket ticket) {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream("archivo.ser");
@@ -114,7 +125,7 @@ public class FlowerShop {
     public static void readJSON() {
 
         try {
-            FileInputStream archivo = new FileInputStream( "archivo.ser");
+            FileInputStream archivo = new FileInputStream("archivo.ser");
             ObjectInputStream objectInputStream = new ObjectInputStream(archivo);
             Ticket ticket = (Ticket) objectInputStream.readObject();
 

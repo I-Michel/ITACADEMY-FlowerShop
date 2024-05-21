@@ -11,7 +11,7 @@ public class MySQLDB implements DataBase {
     private static MySQLDB instance;
     private static String url = "jdbc:mysql://localhost:3306/flowershop";
     private static String user = "root";
-    private static String password = "2307";
+    private static String password = "1203";
 
     private MySQLDB() {
 
@@ -314,5 +314,24 @@ public class MySQLDB implements DataBase {
         } catch (SQLException e) {
             System.err.println("Error calculating stock value.\n" + e);
         }
+    }
+
+    public boolean checkId(DataBase db, int id) {
+        boolean ok = false;
+        try (Connection con = db.connect()) {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM product WHERE id_product = ?");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int existingId = rs.getInt("id_product");
+                ok = (existingId == id) ? true : false;
+            }
+            if (!ok) {
+                System.err.println("There is no product with the indicated ID.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting data base information.\n" + e);
+        }
+        return ok;
     }
 }

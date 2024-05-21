@@ -1,5 +1,10 @@
 package Validation;
 
+import Connection.DataBase;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Validation {
@@ -96,5 +101,24 @@ public class Validation {
         } while (!ok);
 
         return color;
+    }
+
+    public static int validateId(DataBase db, int id) {
+        int result = 0;
+        int option = 0;
+        boolean ok = db.checkId(db, id);
+        result = (ok) ? 1 : 0;
+
+        if (!ok) {
+            do {
+                option = validateInt("""
+                        Do you want to enter another ID to remove or return to the menu?\s
+                        1. Enter another ID to remove.\s
+                        2. Return to the menu.""");
+            } while (option < 1 || option > 2);
+
+            result = (option == 1) ? 2 : 0;
+        }
+        return result;
     }
 }
